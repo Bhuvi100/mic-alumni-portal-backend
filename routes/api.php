@@ -15,10 +15,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return ['user' => $request->user()];
-    });
+    Route::get('/user', [\App\Http\Controllers\UserController::class, 'show']);
     Route::patch('/users/{user}/update', [\App\Http\Controllers\UserController::class, 'update']);
+
+    Route::get('projects/{project}/status', [\App\Http\Controllers\ProjectStatusController::class, 'show']);
+    Route::patch('projects/{project}/status', [\App\Http\Controllers\ProjectStatusController::class, 'update']);
+
+    Route::get('users/{user}/feedback', [\App\Http\Controllers\FeedbackController::class, 'show']);
+    Route::patch('users/{user}/feedback', [\App\Http\Controllers\FeedbackController::class, 'update']);
+
+    Route::get('users/{user}/status', [\App\Http\Controllers\ParticipantStatusesController::class, 'show']);
+    Route::patch('users/{user}/status', [\App\Http\Controllers\ParticipantStatusesController::class, 'update']);
+
+    Route::get('imports', [\App\Http\Controllers\ImportsController::class, 'index']);
+    Route::post('imports', [\App\Http\Controllers\ImportsController::class, 'import']);
+
+    Route::post('/logout', [\App\Http\Controllers\LogoutController::class]);
 });
 
 Route::post('/login', \App\Http\Controllers\LoginController::class);

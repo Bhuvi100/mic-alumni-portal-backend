@@ -51,6 +51,11 @@ class User extends Authenticatable
         return $this->hasOne(Feedback::class);
     }
 
+    public function status()
+    {
+        return $this->hasOne(ParticipantStatus::class);
+    }
+
     public function projects_as_leader()
     {
         return $this->hasMany(Project::class, 'leader_id');

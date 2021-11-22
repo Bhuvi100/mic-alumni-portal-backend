@@ -10,6 +10,7 @@ class Project extends Model
     use HasFactory;
 
     protected $fillable = [
+        'hackathon',
         'year',
         'team_name',
         'title',

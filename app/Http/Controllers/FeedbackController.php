@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FeedbackUpdateRequest;
-use App\Models\Feedback;
 use App\Models\User;
 
 class FeedbackController extends Controller

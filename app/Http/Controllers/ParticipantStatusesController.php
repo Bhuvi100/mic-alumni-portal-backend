@@ -2,43 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ParticipantStatus;
-use Illuminate\Http\Request;
+use App\Http\Requests\ParticipantStatusUpdateRequest;
+use App\Models\User;
 
 class ParticipantStatusesController extends Controller
 {
-    public function index()
+    public function show(User $user)
     {
-        //
+        return $user->feedback;
     }
 
-    public function create()
-    {
-        //
-    }
 
-    public function store(Request $request)
+    public function update(ParticipantStatusUpdateRequest $request, User $user)
     {
-        //
-    }
+        if ($user->status()->exists()) {
+            $user->status()->update($request->validated());
+        } else {
+            $user->status()->create($request->validated());
+        }
 
-    public function show(ParticipantStatus $participantStatus)
-    {
-        //
-    }
-
-    public function edit(ParticipantStatus $participantStatus)
-    {
-        //
-    }
-
-    public function update(Request $request,ParticipantStatus $participantStatus)
-    {
-        //
-    }
-
-    public function destroy(ParticipantStatus $participantStatus)
-    {
-        //
+        return $user->feedback;
     }
 }
