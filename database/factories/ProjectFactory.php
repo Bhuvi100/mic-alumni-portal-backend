@@ -14,6 +14,7 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
+            'hackathon' => Arr::random(['SIH', 'ASEAN']),
             'year' => Arr::random(['2017', '2018']),
             'team_name' => $this->faker->name,
             'title' => $this->faker->title,

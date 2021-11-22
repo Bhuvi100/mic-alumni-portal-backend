@@ -11,6 +11,7 @@ class CreateImportsTable extends Migration
         Schema::create('imports', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('file_name');
+            $table->string('hackathon');
             $table->bigInteger('projects')->default(0);
             $table->bigInteger('users')->default(0);
             $table->enum('status', ['W', 'P', 'C'])->default('W');

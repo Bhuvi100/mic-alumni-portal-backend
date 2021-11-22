@@ -10,6 +10,7 @@ class CreateProjectsTable extends Migration
     {
         Schema::create('projects',function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('hackathon')->default('Smart India Hackathon');
             $table->string('year', 15);
             $table->string('team_name');
             $table->string('title');

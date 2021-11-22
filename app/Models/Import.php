@@ -8,6 +8,7 @@ class Import extends Model
 {
     protected $fillable = [
         'file_name',
+        'hackathon',
         'projects',
         'users',
         'imported_by',

@@ -13,10 +13,12 @@ class ImportsController extends Controller
         return Import::latest()->get();
     }
 
-    public function import()
+    public function import(Request $request)
     {
-        auth()->login(User::first());
-        auth()->user()->imports()->create(['file_name' => request()->file('file')->getClientOriginalName()]);
+        auth()->user()->imports()->create([
+            'file_name' => $request->file('file')->getClientOriginalName(),
+            'hackathon' => $request->get('hackathon', 'Smart India Hackathon'),
+            ]);
 
         \Maatwebsite\Excel\Facades\Excel::queueImport(new \App\Imports\DataImport(), request()->file('file'), null, \Maatwebsite\Excel\Excel::XLSX);
 

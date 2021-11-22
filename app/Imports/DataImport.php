@@ -28,6 +28,8 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
         $projects = 0;
         $users = 0;
 
+        $import = Import::latest()->first();
+
         foreach ($rows as $row) {
             //Creating Leader user
             $data = [];
@@ -55,6 +57,8 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
             if (Str::length($data['ps_title']) > 255) {
                 $data['ps_title'] = substr($data['ps_title'], 0, 255);
             }
+
+            $data['hackathon'] = $import->hackathon;
 
             $project = $leader->projects_as_leader()->firstOrCreate($data);
 
@@ -90,7 +94,6 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
             }
         }
 
-        $import = Import::latest()->first();
         $import->update(['projects' => (int)($import->projects) + $projects, 'users' => (int)($import->users) + $users]);
     }
 
