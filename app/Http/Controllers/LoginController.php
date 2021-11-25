@@ -20,8 +20,6 @@ class LoginController extends Controller
 
         $url = PasswordlessLogin::forUser($user)->generate();
 
-        $url = str_replace('http://127.0.0.1:8000', 'https://samwyc.ga', $url);
-
         Mail::to($user)->send(new MagicLoginMail($url));
 
         return 'Mail sent';
