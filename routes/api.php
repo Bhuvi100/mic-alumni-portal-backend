@@ -15,7 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', [\App\Http\Controllers\UserController::class, 'show']);
+    Route::get('/user', function (Request $request) {
+        return ['user' => $request->user()];
+    });
+
     Route::patch('/users/{user}/update', [\App\Http\Controllers\UserController::class, 'update']);
 
     Route::get('projects/{project}/status', [\App\Http\Controllers\ProjectStatusController::class, 'show']);
