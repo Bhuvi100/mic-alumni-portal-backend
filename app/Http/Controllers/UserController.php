@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function show(User $user)
+    public function show()
     {
-        return ['user' => $user];
+        return ['user' => auth()->user()];
     }
 
     public function update(UserUpdateRequest $request, User $user)
