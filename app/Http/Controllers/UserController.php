@@ -10,7 +10,10 @@ class UserController extends Controller
 {
     public function show()
     {
-        return ['user' => auth()->user()];
+        $user = auth()->user();
+        $user['project_id'] = auth()->user()->projects->first()?->id;
+
+        return ['user' => $user];
     }
 
     public function update(UserUpdateRequest $request, User $user)

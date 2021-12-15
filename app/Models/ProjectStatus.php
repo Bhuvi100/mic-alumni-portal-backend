@@ -21,6 +21,7 @@ class ProjectStatus extends Model
         'project_delivery_status',
         'project_delivered_status',
         'project_implemented_by_ministry',
+        'mic_support_deploy',
         'incubator_status',
         'name_of_incubator',
         'trl_level',

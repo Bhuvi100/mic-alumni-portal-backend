@@ -9,7 +9,7 @@ class ParticipantStatusesController extends Controller
 {
     public function show(User $user)
     {
-        return $user->feedback;
+        return $user->status;
     }
 
 
@@ -21,6 +21,6 @@ class ParticipantStatusesController extends Controller
             $user->status()->create($request->validated());
         }
 
-        return $user->feedback;
+        return $user->status;
     }
 }

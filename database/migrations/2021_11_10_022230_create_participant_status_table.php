@@ -13,7 +13,7 @@ class CreateParticipantStatusTable extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->text('current_status');
             $table->boolean('project_prototype');
-            $table->boolean('project_details')->nullable();
+//            $table->boolean('project_details')->nullable();
             $table->text('project_elaborate')->nullable();
             $table->string('project_title', 128)->nullable();
             $table->string('project_theme', 128)->nullable();
@@ -21,7 +21,7 @@ class CreateParticipantStatusTable extends Migration
             $table->boolean('project_ip_generated')->nullable();
             $table->string('project_ip_type')->nullable();
             $table->boolean('project_ip_status')->nullable();
-            $table->boolean('project_sih_related')->nullable();
+            $table->boolean('project_hackathon_related')->nullable();
             $table->boolean('project_funding_support')->nullable();
             $table->string('project_trl_level', 128)->nullable();
             $table->string('project_video_url', 128)->nullable();

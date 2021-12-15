@@ -20,7 +20,7 @@ class CreateProjectStatusTable extends Migration
             $table->date('funding_date')->nullable();
             $table->boolean('funding_support_needed');
             $table->boolean('project_delivery_status');
-            $table->string('project_delivered_status');
+            $table->string('project_delivered_status')->nullable();
             $table->boolean('project_implemented_by_ministry')->nullable();
             $table->boolean('mic_support_deploy')->nullable();
             $table->boolean('incubator_status');
