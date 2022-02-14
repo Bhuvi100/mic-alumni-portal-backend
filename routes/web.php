@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 Route::get('/login', \App\Http\Controllers\LoginController::class)->name('login');
 Route::get(
-    config('laravel-passwordless-login.login_route').'/{uid}',
+    config('laravel-passwordless-login.login_route'),
     [\App\Http\Controllers\ValidateLoginController::class, 'login']
 )->middleware('web')->name(config('laravel-passwordless-login.login_route_name'));
 

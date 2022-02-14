@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\MagicLoginMail;
 use App\Models\User;
-use Grosv\LaravelPasswordlessLogin\PasswordlessLogin;
+use App\Services\PasswordlessLoginUrlService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -18,7 +18,7 @@ class LoginController extends Controller
 
         $user = User::where('email', $request->email)->firstOrFail();
 
-        $url = PasswordlessLogin::forUser($user)->generate();
+        $url = PasswordlessLoginUrlService::forUser($user)->generate();
 
         Mail::to($user)->send(new MagicLoginMail($url));
 

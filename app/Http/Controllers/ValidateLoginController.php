@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Grosv\LaravelPasswordlessLogin\Exceptions\ExpiredSignatureException;
 use Grosv\LaravelPasswordlessLogin\Exceptions\InvalidSignatureException;
 use Grosv\LaravelPasswordlessLogin\LaravelPasswordlessLoginController;
-use Grosv\LaravelPasswordlessLogin\PasswordlessLoginService;
+use App\Services\PasswordlessLoginService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Auth;
