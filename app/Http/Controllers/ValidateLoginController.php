@@ -53,7 +53,7 @@ class ValidateLoginController extends Controller
 
         $user = $this->passwordlessLoginService->user;
 
-        $redirectUrl = env('frontend_domain') . config('laravel-passwordless-login.redirect_on_success');
+        $redirectUrl = env('FRONTEND_DOMAIN') . config('laravel-passwordless-login.redirect_on_success');
 
         $token = $user->createToken('magic_link_login')->plainTextToken;
 
