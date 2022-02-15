@@ -14,7 +14,7 @@ class CreateImportsTable extends Migration
             $table->string('hackathon');
             $table->bigInteger('projects')->default(0);
             $table->bigInteger('users')->default(0);
-            $table->enum('status', ['W', 'P', 'C'])->default('W');
+            $table->enum('status', ['W', 'P', 'C', 'F'])->default('W');
             $table->foreignId('imported_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });

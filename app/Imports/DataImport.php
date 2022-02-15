@@ -12,89 +12,129 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\BeforeImport;
 
-class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, ShouldQueue, withEvents
+class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, ShouldQueue, withEvents, WithMultipleSheets
 {
     use RegistersEventListeners;
+
+    private Import $import;
+
+    public function __construct(Import $import)
+    {
+        $this->import = $import;
+    }
+
+    /**
+     * @return array
+     */
+    public function registerEvents(): array
+    {
+        return [
+            BeforeImport::class => function(BeforeImport $event) {
+                if ($this->import->status !== 'F') {
+                    $this->import->update(['status' => 'P']);
+                }
+            },
+
+            AfterImport::class => function(AfterImport $event) {
+                if ($this->import->status !== 'F') {
+                    $this->import->update(['status' => 'C']);
+                }
+            },
+        ];
+    }
+
+    public function sheets(): array
+    {
+        return [
+            0 => $this,
+        ];
+    }
+
     /**
      * @param Collection $rows
      */
     public function collection(Collection $rows)
     {
-        $rows = array_change_key_case($rows->toArray(), CASE_LOWER);
+        try {
+            $rows = array_change_key_case($rows->toArray(),CASE_LOWER);
 
-        $projects = 0;
-        $users = 0;
+            $projects = 0;
+            $users = 0;
 
-        $import = Import::latest()->first();
-
-        foreach ($rows as $row) {
-            //Creating Leader user
-            $data = [];
-
-            foreach ($this->leader_mapping() as $column => $header) {
-                $data[$column] = $row[$header];
-            }
-
-            if (!in_array($data['gender'], $this->genders(), true)) {
-                $data['gender'] = 'na';
-            }
-
-            if (!$leader = User::firstWhere('email', $data['email'])) {
-                $leader = User::create($data);
-                $users ++;
-            }
-
-            //Creating Project
-            $data = [];
-
-            foreach ($this->project_mapping() as $column => $header) {
-                $data[$column] = $row[$header];
-            }
-
-            if (Str::length($data['ps_title']) > 255) {
-                $data['ps_title'] = substr($data['ps_title'], 0, 255);
-            }
-
-            $data['hackathon'] = $import->hackathon;
-
-            $project = $leader->projects_as_leader()->firstOrCreate($data);
-
-            $leader->projects()->attach($project);
-
-            if ($project->wasRecentlyCreated) {
-                $projects ++;
-            }
-
-
-            //Creating members
-            for ($id = 2; $id < 7; $id++) {
+            foreach ($rows as $row) {
+                //Creating Leader user
                 $data = [];
 
-                foreach ($this->members_mapping($id) as $column => $header) {
+                foreach ($this->leader_mapping() as $column => $header) {
                     $data[$column] = $row[$header];
                 }
 
-                if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                    break;
-                }
-
-                if (!in_array($data['gender'], $this->genders(), true)) {
+                if (!in_array($data['gender'],$this->genders(),true)) {
                     $data['gender'] = 'na';
                 }
 
-                if ($user = User::firstWhere('email', $data['email'])) {
-                   $project->users()->attach($user);
-                } else {
-                    $project->users()->create($data);
-                    $users++;
+                if (!$leader = User::firstWhere('email',$data['email'])) {
+                    $leader = User::create($data);
+                    $users ++;
+                }
+
+                //Creating Project
+                $data = [];
+
+                foreach ($this->project_mapping() as $column => $header) {
+                    $data[$column] = $row[$header];
+                }
+
+                if (Str::length($data['ps_title']) > 255) {
+                    $data['ps_title'] = substr($data['ps_title'],0,255);
+                }
+
+                $data['hackathon'] = $this->import->hackathon;
+
+                $project = $leader->projects_as_leader()->firstOrCreate($data);
+
+                $leader->projects()->attach($project);
+
+                if ($project->wasRecentlyCreated) {
+                    $projects ++;
+                }
+
+
+                //Creating members
+                for ($id = 2; $id < 7; $id ++) {
+                    $data = [];
+
+                    foreach ($this->members_mapping($id) as $column => $header) {
+                        $data[$column] = $row[$header];
+                    }
+
+                    if (!filter_var($data['email'],FILTER_VALIDATE_EMAIL)) {
+                        break;
+                    }
+
+                    if (!in_array($data['gender'],$this->genders(),true)) {
+                        $data['gender'] = 'na';
+                    }
+
+                    if ($user = User::firstWhere('email',$data['email'])) {
+                        $project->users()->attach($user);
+                    } else {
+                        $project->users()->create($data);
+                        $users ++;
+                    }
                 }
             }
-        }
 
-        $import->update(['projects' => (int)($import->projects) + $projects, 'users' => (int)($import->users) + $users]);
+            $this->import->update(['projects' => (int)($this->import->projects) + $projects,
+                'users' => (int)($this->import->users) + $users]);
+        } catch (\Throwable $exception) {
+            $this->import->update(['status' => 'F']);
+            report($exception);
+        }
     }
 
     private function genders()
@@ -139,7 +179,7 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
     private function members_mapping(int $id)
     {
         return [
-          'name' => "member_{$id}_name",
+            'name' => "member_{$id}_name",
             'email' => "member_{$id}_email",
             'phone' => "member_{$id}_contact",
             'gender' => "member_{$id}_gender",
