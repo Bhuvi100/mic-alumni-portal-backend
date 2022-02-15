@@ -9,7 +9,7 @@ class ProjectStatusController extends Controller
 {
     public function show(Project $project)
     {
-        return $project->project_status()->exists() ? response()->json($project->project_status) : abort(404);
+        return response()->json($project->project_status);
     }
 
 

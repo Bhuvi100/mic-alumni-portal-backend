@@ -9,7 +9,7 @@ class ParticipantStatusesController extends Controller
 {
     public function show(User $user)
     {
-        return $user->status;
+        return response()->json($user->status);
     }
 
 

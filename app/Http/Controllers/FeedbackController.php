@@ -9,7 +9,7 @@ class FeedbackController extends Controller
 {
     public function show(User $user)
     {
-        return $user->feedback;
+        return response()->json($user->feedback);
     }
 
 
