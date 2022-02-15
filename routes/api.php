@@ -28,8 +28,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('users/{user}/status', [\App\Http\Controllers\ParticipantStatusesController::class, 'show']);
     Route::post('users/{user}/status', [\App\Http\Controllers\ParticipantStatusesController::class, 'update']);
 
-    Route::get('imports', [\App\Http\Controllers\ImportsController::class, 'index']);
-    Route::post('imports', [\App\Http\Controllers\ImportsController::class, 'import']);
+    Route::middleware('admin')->group(function () {
+        Route::get('imports',[\App\Http\Controllers\ImportsController::class,'index']);
+        Route::post('imports',[\App\Http\Controllers\ImportsController::class,'import']);
+    });
 
     Route::post('/logout', \App\Http\Controllers\LogoutController::class);
 });
