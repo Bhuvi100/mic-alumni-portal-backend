@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ImportsCollection;
 use App\Models\Import;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,7 +11,7 @@ class ImportsController extends Controller
 {
     public function index()
     {
-        return Import::latest()->get();
+        return new ImportsCollection(Import::latest()->paginate(10));
     }
 
     public function import(Request $request)
