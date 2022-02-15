@@ -13,6 +13,7 @@ class Import extends Model
         'users',
         'imported_by',
         'status',
+        'file',
     ];
 
     public function importer()

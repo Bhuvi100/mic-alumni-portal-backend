@@ -15,12 +15,15 @@ class ImportsController extends Controller
 
     public function import(Request $request)
     {
-        auth()->user()->imports()->create([
-            'file_name' => $request->file('file')->getClientOriginalName(),
-            'hackathon' => $request->get('hackathon', 'Smart India Hackathon'),
-            ]);
+        $file = $request->file('file');
 
-        \Maatwebsite\Excel\Facades\Excel::queueImport(new \App\Imports\DataImport(), request()->file('file'), null, \Maatwebsite\Excel\Excel::XLSX);
+        $import = auth()->user()->imports()->create([
+            'file_name' => $file->getClientOriginalName(),
+            'hackathon' => $request->get('hackathon', 'Smart India Hackathon'),
+            'file' => $file->store('imports')
+        ]);
+
+        \Maatwebsite\Excel\Facades\Excel::queueImport(new \App\Imports\DataImport($import), $file);
 
         return ['success' => '1'];
     }

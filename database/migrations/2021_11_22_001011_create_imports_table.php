@@ -16,6 +16,7 @@ class CreateImportsTable extends Migration
             $table->bigInteger('users')->default(0);
             $table->enum('status', ['W', 'P', 'C', 'F'])->default('W');
             $table->foreignId('imported_by')->constrained('users')->cascadeOnDelete();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }
