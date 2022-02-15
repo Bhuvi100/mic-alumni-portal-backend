@@ -15,8 +15,6 @@ class ImportsController extends Controller
 
     public function import(Request $request)
     {
-        auth()->login(User::find(1)); //TODO REMOVE AFTER
-
         auth()->user()->imports()->create([
             'file_name' => $request->file('file')->getClientOriginalName(),
             'hackathon' => $request->get('hackathon', 'Smart India Hackathon'),
