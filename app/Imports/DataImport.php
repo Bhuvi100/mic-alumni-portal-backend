@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\BeforeImport;
+use Maatwebsite\Excel\Events\ImportFailed;
 
 class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, ShouldQueue, withEvents, WithMultipleSheets
 {
@@ -34,16 +35,20 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
     {
         return [
             BeforeImport::class => function(BeforeImport $event) {
-                if ($this->import->status !== 'F') {
+                if (Import::find($this->import->id)->status !== 'F') {
                     $this->import->update(['status' => 'P']);
                 }
             },
 
             AfterImport::class => function(AfterImport $event) {
-                if ($this->import->status !== 'F') {
+                if (Import::find($this->import->id)->status !== 'F') {
                     $this->import->update(['status' => 'C']);
                 }
             },
+
+            ImportFailed::class => function(ImportFailed $event) {
+                $this->import->update(['status' => 'F']);
+            }
         ];
     }
 
@@ -59,6 +64,11 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
      */
     public function collection(Collection $rows)
     {
+        //Skipping import of other chunks if the import is already failed
+        if ($this->import->status === 'F') {
+            return;
+        }
+
         try {
             $rows = array_change_key_case($rows->toArray(),CASE_LOWER);
 
@@ -116,7 +126,7 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
                         break;
                     }
 
-                    if (!in_array($data['gender'],$this->genders(),true)) {
+                    if (!in_array($data['gender'], $this->genders(),true)) {
                         $data['gender'] = 'na';
                     }
 
@@ -189,15 +199,5 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
     public function chunkSize(): int
     {
         return 500;
-    }
-
-    public static function beforeImport(BeforeImport $event)
-    {
-        Import::latest()->first()->update(['status' => 'P']);
-    }
-
-    public static function afterImport(AfterImport $event)
-    {
-        Import::latest()->first()->update(['status' => 'C']);
     }
 }
