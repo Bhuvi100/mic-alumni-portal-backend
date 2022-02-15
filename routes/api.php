@@ -29,8 +29,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('users/{user}/status', [\App\Http\Controllers\ParticipantStatusesController::class, 'update']);
 
     Route::middleware('admin')->group(function () {
-        Route::get('imports',[\App\Http\Controllers\ImportsController::class,'index']);
-        Route::post('imports',[\App\Http\Controllers\ImportsController::class,'import']);
+        Route::get('imports', [\App\Http\Controllers\ImportsController::class, 'index']);
+        Route::post('imports', [\App\Http\Controllers\ImportsController::class, 'import']);
+        Route::post('imports/{import}/download', [\App\Http\Controllers\ImportsController::class, 'download'])->name('imports.download');
     });
 
     Route::post('/logout', \App\Http\Controllers\LogoutController::class);

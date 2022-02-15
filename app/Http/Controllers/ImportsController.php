@@ -27,4 +27,9 @@ class ImportsController extends Controller
 
         return ['success' => '1'];
     }
+
+    public function download(Import $import)
+    {
+        return \Storage::download($import->file);
+    }
 }
