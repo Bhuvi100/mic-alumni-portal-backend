@@ -10,11 +10,11 @@ class FeedbackUpdateRequest extends FormRequest
     {
         return [
             'hired_by_ministry' => ['required', 'boolean'],
-            'hired_by_ministry_elaborate' => ['required_if:hired_by_ministry,1', 'string'],
+            'hired_by_ministry_elaborate' => ['required_if:hired_by_ministry,1', 'nullable', 'string'],
             'opportunity_status' => ['required', 'boolean'],
-            'opportunity_details' => ['required_if:opportunity_status,1', 'string'],
+            'opportunity_details' => ['required_if:opportunity_status,1', 'nullable', 'string'],
             'recommendation_status' => ['required', 'boolean'],
-            'recommendation_details' => ['required_if:recommendation_status,1', 'string'],
+            'recommendation_details' => ['required_if:recommendation_status,1', 'nullable', 'string'],
             'mic_help' => ['required', 'boolean'],
             'recommend_to_student' => ['required', 'boolean'],
             'mic_participation' => ['required', 'boolean'],

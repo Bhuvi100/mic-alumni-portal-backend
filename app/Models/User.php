@@ -20,10 +20,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'alternate_email',
         'phone',
         'gender',
         'role',
-        'signed_up_at'
+        'signed_up_at',
+        'picture'
     ];
 
     /**
@@ -41,6 +43,11 @@ class User extends Authenticatable
         return $this->signed_up_at ? config('laravel-passwordless-login.login_route_expires') : 4320;
     }
 
+    public function getPictureAttribute($value)
+    {
+        return asset($value ? 'storage/' . $value : 'storage/images/profile.png');
+    }
+
     public function projects()
     {
         return $this->belongsToMany(Project::class);
@@ -48,12 +55,17 @@ class User extends Authenticatable
 
     public function feedback()
     {
-        return $this->hasOne(Feedback::class);
+        return $this->hasMany(Feedback::class);
     }
 
     public function status()
     {
         return $this->hasOne(ParticipantStatus::class);
+    }
+
+    public function story()
+    {
+        return $this->hasOne(Story::class);
     }
 
     public function projects_as_leader()
@@ -69,5 +81,10 @@ class User extends Authenticatable
     public function is_admin()
     {
         return $this->role === 'admin';
+    }
+
+    public function is_permitted(User $user)
+    {
+        return $this->id == $user->id;
     }
 }

@@ -6,6 +6,7 @@ use App\Mail\MagicLoginMail;
 use App\Models\User;
 use App\Services\PasswordlessLoginUrlService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class LoginController extends Controller
@@ -17,6 +18,8 @@ class LoginController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->firstOrFail();
+
+        Log::info('LOGIN TRY BY: ' . $request->email);
 
         $url = PasswordlessLoginUrlService::forUser($user)->generate();
 

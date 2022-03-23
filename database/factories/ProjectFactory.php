@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Initiative;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -14,10 +15,9 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'hackathon' => Arr::random(['SIH', 'ASEAN']),
-            'year' => Arr::random(['2017', '2018']),
+            'initiative_id' => Arr::random(Initiative::all()->pluck('id')->toArray()),
             'team_name' => $this->faker->name,
-            'title' => $this->faker->title,
+            'title' => $this->faker->text(15),
             'idea_id/team_id' => \Str::random(5),
             'description' => $this->faker->text,
             'leader_id' => User::all()->random(1)->first()->id,

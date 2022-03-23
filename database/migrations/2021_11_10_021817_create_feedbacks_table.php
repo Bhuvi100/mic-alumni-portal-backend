@@ -11,6 +11,7 @@ class CreateFeedbacksTable extends Migration
         Schema::create('feedbacks',function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->boolean('hired_by_ministry');
             $table->text('hired_by_ministry_elaborate')->nullable();
             $table->boolean('opportunity_status');

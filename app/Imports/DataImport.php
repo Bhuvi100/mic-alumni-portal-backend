@@ -83,7 +83,9 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
                     $data[$column] = $row[$header];
                 }
 
-                if (!in_array($data['gender'],$this->genders(),true)) {
+                $data['gender'] = strtolower($data['gender']);
+
+                if (!in_array($data['gender'], $this->genders(),true)) {
                     $data['gender'] = 'na';
                 }
 
@@ -103,7 +105,7 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
                     $data['ps_title'] = substr($data['ps_title'],0,255);
                 }
 
-                $data['hackathon'] = $this->import->hackathon;
+                $data['initiative_id'] = $this->import->initiative_id;
 
                 $project = $leader->projects_as_leader()->firstOrCreate($data);
 
@@ -126,6 +128,7 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
                         break;
                     }
 
+                    $data['gender'] = strtolower($data['gender']);
                     if (!in_array($data['gender'], $this->genders(),true)) {
                         $data['gender'] = 'na';
                     }
@@ -169,7 +172,6 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
     private function project_mapping()
     {
         return [
-            'year' => 'year',
             'team_name' => 'team_name',
             'type' => 'type',
             'theme' => 'theme',

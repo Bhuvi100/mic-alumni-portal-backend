@@ -17,12 +17,12 @@ class ImportResource extends JsonResource
         return [
             'id' => $this->id,
             'file_name' => $this->file_name,
-            'hackathon' => $this->hackathon,
+            'initiative' => $this->initiative->hackathon . ' - ' . $this->initiative->edition,
             'projects' => $this->projects,
             'users' => $this->users,
             'status' => $this->status,
             'file' => $this->file,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at,
 
             'imported_by' => $this->importer->name,

@@ -3,24 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FeedbackUpdateRequest;
+use App\Models\Project;
 use App\Models\User;
 
 class FeedbackController extends Controller
 {
-    public function show(User $user)
+    public function show(Project $project, ?User $user)
     {
-        return response()->json($user->feedback);
+        authorize_action($project, $user);
+
+        return response()->json($user->id ?
+            $user->feedback()->firstWhere('project_id', $project->id) :
+            $project->feedbackOfAuthUser());
     }
 
 
-    public function update(FeedbackUpdateRequest $request, User $user)
+    public function update(FeedbackUpdateRequest $request, Project $project)
     {
-        if ($user->feedback()->exists()) {
-            $user->feedback()->update($request->validated());
+        authorize_action($project);
+
+        $feedback = $project->feedbackOfAuthUser();
+
+        if ($feedback) {
+            $feedback->update($request->validated());
         } else {
-            $user->feedback()->create($request->validated());
+            $feedback = $project->feedbacks()->create($request->validated() + ['user_id' => auth()->id()]);
         }
 
-        return $user->feedback;
+        return $feedback;
     }
 }

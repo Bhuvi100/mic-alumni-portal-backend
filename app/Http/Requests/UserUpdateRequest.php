@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -10,8 +11,10 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'min:3', 'max:100'],
-            'phone' => ['required', 'string', 'min:10', 'max:25'],
-            'gender' => ['required', 'in:male,female,other']
+            'alternate_email' => ['nullable', 'email'],
+            'phone' => ['required', 'digits:10, 15', 'numeric'],
+            'gender' => ['required', 'in:male,female,other'],
+            'picture' => ['sometimes', 'nullable', 'file', 'mimes:jpg,jpeg,png']
         ];
     }
 

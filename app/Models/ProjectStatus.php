@@ -43,4 +43,14 @@ class ProjectStatus extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function is_permitted(User $user)
+    {
+        return in_array($user->id, $this->project->users()->pluck('users.id')->toArray(),false);
+    }
+
+    public function setFundingSupportNeededAttribute($value)
+    {
+        $this->attributes['funding_support_needed'] = $value ?? false;
+    }
 }

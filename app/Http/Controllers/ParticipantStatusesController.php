@@ -7,14 +7,16 @@ use App\Models\User;
 
 class ParticipantStatusesController extends Controller
 {
-    public function show(User $user)
+    public function show(?User $user)
     {
-        return response()->json($user->status);
+        return response()->json($user->id ? $user->status : auth()->user()->status);
     }
 
 
-    public function update(ParticipantStatusUpdateRequest $request, User $user)
+    public function update(ParticipantStatusUpdateRequest $request)
     {
+        $user = auth()->user();
+
         if ($user->status()->exists()) {
             $user->status()->update($request->validated());
         } else {

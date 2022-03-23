@@ -10,6 +10,7 @@ class Feedback extends Model
 
     protected $fillable = [
         'user_id',
+        'project_id',
         'hired_by_ministry',
         'hired_by_ministry_elaborate',
         'opportunity_status',
@@ -25,5 +26,15 @@ class Feedback extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function is_permitted(User $user)
+    {
+        return $this->user_id == $user->id;
     }
 }

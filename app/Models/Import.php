@@ -8,13 +8,18 @@ class Import extends Model
 {
     protected $fillable = [
         'file_name',
-        'hackathon',
+        'initiative_id',
         'projects',
         'users',
         'imported_by',
         'status',
         'file',
     ];
+
+    public function initiative()
+    {
+        return $this->belongsTo(Initiative::class);
+    }
 
     public function importer()
     {

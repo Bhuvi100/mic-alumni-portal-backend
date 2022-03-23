@@ -30,4 +30,9 @@ class ParticipantStatus extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function is_permitted(User $user)
+    {
+        return $this->user_id == $user->id;
+    }
 }
