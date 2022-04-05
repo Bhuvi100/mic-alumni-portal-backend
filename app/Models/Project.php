@@ -31,7 +31,7 @@ class Project extends Model
 
     public function initiative()
     {
-        return $this->belongsTo(Initiative::class, 'initiative_id', 'id');
+        return $this->belongsTo(Initiative::class);
     }
 
     public function users()

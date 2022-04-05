@@ -2,44 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UsersExport;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $query = User::query();
-        $filter_registered = \request()->get('registered', null);
+        $query = User::filter();
 
-        if ($filter_registered) {
-            $query->whereNotNull('signed_up_at');
-        } else if ($filter_registered !== null) {
-            $query->whereNull('signed_up_at');
-        }
+        return response()->json($query->paginate(25, 'users.*'));
+    }
 
-        if (\request()->get('bootstrapped', false)) {
-            $query->whereHas('projects', function (Builder $builder) {
-                $builder->whereRelation('project_status', 'startup_status', true);
-            });
-        }
-
-        if (\request()->get('funding', false) == true) {
-            $query->whereHas('projects', function (Builder $builder) {
-                $builder->whereRelation('project_status', 'funding_support_needed', true);
-            });
-        }
-
-        if (($initiatives = \Request::get('initiatives', [])) && (count($initiatives))) {
-            $query->whereHas('projects',function (Builder $builder) use ($initiatives) {
-                $builder->whereIn('initiative_id',$initiatives);
-            });
-        }
-
-        return response()->json($query->paginate(25));
+    public function exportData()
+    {
+        return Excel::download(new UsersExport, 'users.xlsx');
     }
 
 

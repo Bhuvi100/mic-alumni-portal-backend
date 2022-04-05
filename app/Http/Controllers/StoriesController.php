@@ -12,9 +12,9 @@ class StoriesController extends Controller
     public function public_index()
     {
         $stories = \Cache::rememberForever('stories_public', function () {
-            $alumni_stories = Story::select(['title', 'description'])->with('user:name,picture')
+            $alumni_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
                 ->where('display', 'alumni')->limit(3)->get();
-            $mentor_stories = Story::select(['title', 'description'])->with('user:name,picture')
+            $mentor_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
                 ->where('display', 'mentor')->limit(3)->get();
 
             return [
@@ -26,9 +26,44 @@ class StoriesController extends Controller
         return response()->json($stories);
     }
 
+    public function public_show($id)
+    {
+        $id = (int) $id;
+
+        if ($id < 1 || $id > 6) {
+            abort(404);
+        }
+
+        $stories = \Cache::rememberForever('stories_public', function () {
+            $alumni_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
+                ->where('display', 'alumni')->limit(3)->get();
+            $mentor_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
+                ->where('display', 'mentor')->limit(3)->get();
+
+            return [
+                'alumni' => $alumni_stories,
+                'mentor' => $mentor_stories,
+            ];
+        });
+
+        if ($id < 4) {
+            if (isset($stories['alumni'][$id - 1])) {
+                return response()->json($stories['alumni'][$id - 1]);
+            }
+
+            return abort(404);
+        }
+
+        if (isset($stories['mentor'][$id - 4])) {
+            return response()->json($stories['mentor'][$id - 4]);
+        }
+
+        return abort(404);
+    }
+
     public function index()
     {
-        return response()->json(Story::latest()->with('user')->orderBy('display')->get());
+        return response()->json(Story::with('user')->orderByDesc('display')->get());
     }
 
     public function show(?User $user)
@@ -55,9 +90,9 @@ class StoriesController extends Controller
             $user->story()->create($validated);
         }
 
-        $alumni_stories = Story::select(['title', 'description'])->with('user:name,picture')
+        $alumni_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
             ->where('display', 'alumni')->limit(3)->get();
-        $mentor_stories = Story::select(['title', 'description'])->with('user:name,picture')
+        $mentor_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
             ->where('display', 'mentor')->limit(3)->get();
 
         \Cache::put('stories_public', [
@@ -80,9 +115,9 @@ class StoriesController extends Controller
             'display' => $request->display,
         ]);
 
-        $alumni_stories = Story::select(['title', 'description'])->with('user:name,picture')
+        $alumni_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
             ->where('display', 'alumni')->limit(3)->get();
-        $mentor_stories = Story::select(['title', 'description'])->with('user:name,picture')
+        $mentor_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
             ->where('display', 'mentor')->limit(3)->get();
 
         \Cache::put('stories_public', [

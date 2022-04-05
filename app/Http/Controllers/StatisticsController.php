@@ -39,7 +39,7 @@ class StatisticsController extends Controller
         });
 
         $signup_count = Cache::remember('signup_count', $expiry, function () {
-            $query = User::select(DB::raw('MONTHNAME(signed_up_at) as month,COUNT(id) as count'))->where('signed_up_at', '>', now()->subMonths(5)->firstOfMonth())->oldest()->groupby('month')->get()->all();
+            $query = User::select(DB::raw('MONTHNAME(signed_up_at) as month,COUNT(id) as count'))->where('signed_up_at', '>', now()->subMonths(5)->firstOfMonth())->oldest('signed_up_at')->groupby('month')->get()->all();
 
             $r = [];
             foreach ($query as $q) {

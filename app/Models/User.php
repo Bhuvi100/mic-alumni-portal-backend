@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Grosv\LaravelPasswordlessLogin\Traits\PasswordlessLogin;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -86,5 +87,36 @@ class User extends Authenticatable
     public function is_permitted(User $user)
     {
         return $this->id == $user->id;
+    }
+
+    public static function filter()
+    {
+        $query = self::query();
+        $filter_registered = \request()->get('registered', null);
+
+        if ($filter_registered) {
+            $query->whereNotNull('signed_up_at');
+        } else if ($filter_registered !== null) {
+            $query->whereNull('signed_up_at');
+        }
+
+        $query->join('project_user', 'users.id', '=', 'project_user.user_id')
+            ->join('projects', 'project_user.project_id', '=', 'projects.id')
+            ->leftJoin('project_status', 'projects.id', '=', 'project_status.project_id');
+
+        if (\request()->get('bootstrapped', false)) {
+            $query->where('project_status.startup_status', true);
+        }
+
+        if (\request()->get('funding', false) == true) {
+            $query->where('project_status.funding_support_needed', true);
+        }
+
+        if (($initiatives = \request()->get('initiatives', [])) && is_array($initiatives) && (count($initiatives))) {
+            $query->whereIn('projects.initiative_id', $initiatives);
+        }
+
+        return $query;
+
     }
 }

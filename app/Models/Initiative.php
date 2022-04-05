@@ -17,7 +17,7 @@ class Initiative extends Model
 
     public function projects()
     {
-        return $this->hasMany(Project::class, 'initiative_id', 'id');
+        return $this->hasMany(Project::class);
     }
 
     public function getCreatedAtAttribute($value)

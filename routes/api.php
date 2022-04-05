@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/announcements/public', [\App\Http\Controllers\AnnouncementsController::class, 'public_index']);
+Route::get('/stories/public', [\App\Http\Controllers\StoriesController::class, 'public_index']);
+Route::get('/stories/public/{id}', [\App\Http\Controllers\StoriesController::class, 'public_show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [\App\Http\Controllers\UserController::class, 'show']);
@@ -49,6 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
         Route::post('/users', [\App\Http\Controllers\UserController::class, 'index']);
+        Route::post('users/export', [\App\Http\Controllers\UserController::class, 'exportData']);
         Route::get('/users/{user}', [\App\Http\Controllers\UserController::class, 'show']);
         Route::get('users/{user}/status', [\App\Http\Controllers\ParticipantStatusesController::class, 'show']);
         Route::get('users/{user}/story', [\App\Http\Controllers\StoriesController::class, 'show']);
