@@ -116,7 +116,7 @@ class User extends Authenticatable
             $query->whereIn('projects.initiative_id', $initiatives);
         }
 
-        return $query;
+        return $query->distinct();
 
     }
 }
