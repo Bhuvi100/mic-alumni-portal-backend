@@ -133,8 +133,10 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
                         $data['gender'] = 'na';
                     }
 
-                    if ($user = User::firstWhere('email',$data['email'])) {
-                        $project->users()->attach($user);
+                    if (($user = User::firstWhere('email',$data['email']))) {
+                        if (!$user->projects()->find($project->id)) {
+                            $project->users()->attach($user);
+                        }
                     } else {
                         $project->users()->create($data);
                         $users ++;
@@ -200,6 +202,6 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
 
     public function chunkSize(): int
     {
-        return 500;
+        return 3000;
     }
 }
