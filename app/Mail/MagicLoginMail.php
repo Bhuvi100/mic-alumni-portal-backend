@@ -15,6 +15,6 @@ class MagicLoginMail extends Mailable
 
     public function build()
     {
-        return $this->view('emails.magic-login');
+        return $this->from('innovationcell@aicte-india.org', 'Innovation Cell, AICTE')->view('emails.magic-login');
     }
 }
