@@ -13,7 +13,7 @@ class ImportsController extends Controller
 {
     public function index()
     {
-        return ImportResource::collection(Import::latest()->paginate(10));
+        return ImportResource::collection(Import::latest()->paginate(15));
     }
 
     public function import(Request $request)

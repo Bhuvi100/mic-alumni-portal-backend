@@ -20,9 +20,24 @@ class ProjectStatusController extends Controller
         authorize_action($project);
 
         if ($project->project_status()->exists()) {
-            $project->project_status()->update($request->validated());
+            $logo = $project->project_status->company_logo;
+
+            if ($request->hasFile('company_logo')) {
+                if ($logo && \Storage::exists($logo)) {
+                    \Storage::delete($logo);
+                }
+
+                $logo = $request->file('company_logo')->store('images/company_logos');
+            }
+
+            $project->project_status()->update($request->except('company_logo') + ['company_logo' => $logo]);
         } else {
-            $project->project_status()->create($request->validated());
+            $logo = null;
+            if ($request->hasFile('company_logo')) {
+                $logo = $request->file('company_logo')->store('images/company_logos');
+            }
+
+            $project->project_status()->create($request->except('company_logo') + ['company_logo' => $logo]);
         }
 
         return response()->json($project->project_status);

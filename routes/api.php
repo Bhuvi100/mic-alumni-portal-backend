@@ -31,8 +31,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('projects/{project}/feedback', [\App\Http\Controllers\FeedbackController::class, 'show']);
     Route::post('projects/{project}/feedback', [\App\Http\Controllers\FeedbackController::class, 'update']);
 
-    Route::get('user/status', [\App\Http\Controllers\ParticipantStatusesController::class, 'show']);
-    Route::post('user/status', [\App\Http\Controllers\ParticipantStatusesController::class, 'update']);
+    Route::get('status', [\App\Http\Controllers\ParticipantStatusesController::class, 'index'])->name('status.index');
+    Route::post('status', [\App\Http\Controllers\ParticipantStatusesController::class, 'store'])->name('status.store');
+    Route::post('status/{status}', [\App\Http\Controllers\ParticipantStatusesController::class, 'update'])->name('status.update');
 
     Route::get('user/story', [\App\Http\Controllers\StoriesController::class, 'show']);
     Route::post('user/story', [\App\Http\Controllers\StoriesController::class, 'update']);
@@ -43,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('imports/sample/download', [\App\Http\Controllers\ImportsController::class, 'download_sample']);
         Route::post('imports/{import}/download', [\App\Http\Controllers\ImportsController::class, 'download'])->name('imports.download');
         Route::resource('announcements', \App\Http\Controllers\AnnouncementsController::class);
+        Route::get('initiatives/{initiative}/stats', [\App\Http\Controllers\InitiativesController::class, 'getStats']);
         Route::resource('initiatives', \App\Http\Controllers\InitiativesController::class);
         Route::get('stories', [\App\Http\Controllers\StoriesController::class, 'index']);
         Route::post('stories/{story}/update_display', [\App\Http\Controllers\StoriesController::class, 'updateDisplay']);

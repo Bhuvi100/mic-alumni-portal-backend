@@ -17,7 +17,8 @@ class StatisticsController extends Controller
             $query = DB::select("SELECT 'projects' as type, COUNT(id) as count from projects UNION
                           SELECT 'patents' as type, COUNT(id) as count from projects WHERE exists (select * from project_status where project_status.project_id = projects.id and project_status.is_patent_registered = 1) UNION
                           SELECT 'startups' as type, COUNT(id) as count from projects WHERE exists (select * from project_status where project_status.project_id = projects.id and project_status.startup_status = 1) UNION
-                          SELECT 'users' as type, COUNT(id) as count from users where role = 'user'");
+                          SELECT 'users' as type, COUNT(id) as count from users where role = 'user' UNION 
+                          SELECT 'users_registered' as type, COUNT(id) as count from users where role = 'user' and signed_up_at is not null");
 
             $r = [];
             foreach ($query as $q) {

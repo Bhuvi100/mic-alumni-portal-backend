@@ -36,7 +36,9 @@ class ProjectStatus extends Model
         'startup_name',
         'company_registration_status',
         'company_name',
-        'company_cin',
+        'company_registration_type',
+        'company_registration_dpiit',
+        'company_logo'
     ];
 
     public function project()

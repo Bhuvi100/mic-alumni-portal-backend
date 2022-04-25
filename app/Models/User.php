@@ -27,7 +27,12 @@ class User extends Authenticatable
         'gender',
         'role',
         'signed_up_at',
-        'picture'
+        'picture',
+        'employment_status',
+        'degree',
+        'organization_name',
+        'designation',
+        'roles_and_expertise',
     ];
 
     /**
@@ -48,6 +53,36 @@ class User extends Authenticatable
     public function getPictureAttribute($value)
     {
         return asset($value ? Storage::disk('public')->url($value) : 'assets/profile.png');
+    }
+
+    public function getRolesAndExpertiseAttribute($value)
+    {
+        if ($value == null || (($decoded = is_array($value) ? $value : json_decode($value, true)) && !count($decoded))) {
+            return [];
+        }
+
+        return [
+            'roles' => $decoded['roles'] ?? [],
+            'expertise' => $decoded['expertise'] ?? [],
+        ];
+    }
+
+    public function getRolesAttribute()
+    {
+        if ($this->roles_and_expertise && ($decoded = is_array($this->roles_and_expertise) ? $this->roles_and_expertise : json_decode($this->roles_and_expertise)) && isset($decoded['roles'])) {
+            return $decoded['roles'];
+        }
+
+        return [];
+    }
+
+    public function getExpertiseAttribute()
+    {
+        if ($this->roles_and_expertise && ($decoded = is_array($this->roles_and_expertise) ? $this->roles_and_expertise : json_decode($this->roles_and_expertise)) && isset($decoded['expertise'])) {
+            return $decoded['expertise'];
+        }
+
+        return [];
     }
 
     public function projects()

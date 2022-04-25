@@ -75,23 +75,50 @@ class UserController extends Controller
     public function show(?User $user)
     {
         $user = $user->id ? $user : auth()->user();
+        $user_array = $user->toArray();
+        $user_array['roles'] = $user->roles;
+        $user_array['expertise'] = $user->expertise;
 
         return response()->json([
-            'user' => $user,
-            'projects' => $user->projects()->get()
+            'user' => $user_array,
+            'projects' => $user->projects()->with('initiative')->get()
                 ->mapWithKeys(function($project) {
                     $array = [
                         'id' => $project->id,
                         'team_name' => $project->team_name,
                         'title' => $project->title,
+                        'description' => $project->description,
+                        'ps_title' => $project->ps_title,
+                        'college' => $project->college,
+                        'leader_id' => $project->leader_id,
                         'initiative' => [
                             'hackathon' => $project->initiative->hackathon,
                             'edition' => $project->initiative->edition
                         ]
                     ];
 
-                    return [$project['id'] => $array];
+                    return [$project->id => $array];
                 }),
+            'own_projects' => $user->status()->get()->mapWithKeys(function ($project) {
+                $array = [
+                    'project_title' => $project->project_title,
+                    'project_theme' => $project->project_theme,
+                    'project_status' => $project->project_status,
+                    'project_ip_generated' => $project->project_ip_generated,
+                    'project_ip_type' => $project->project_ip_type,
+                    'project_ip_status' => $project->project_ip_status,
+                    'project_image' => $project->project_image,
+                    'project_incubated' => $project->project_incubated,
+                    'project_incubator_name' => $project->project_incubator_name,
+                    'project_incubator_city' => $project->project_incubator_city,
+                    'project_hackathon_related' => $project->project_hackathon_related,
+                    'project_funding_support' => $project->project_funding_support,
+                    'project_trl_level' => $project->project_trl_level,
+                    'project_video_url' => $project->project_video_url,
+                ];
+
+                return [$project->id => $array];
+            })
         ]);
     }
 
@@ -99,7 +126,7 @@ class UserController extends Controller
     {
         $user = auth()->user();
 
-        $data = $request->validated();
+        $data = $request->except(['roles', 'expertise']);
 
         if (!$user->signed_up_at) {
             $data['signed_up_at'] = now();
@@ -113,11 +140,19 @@ class UserController extends Controller
             $data['picture'] = $request->file('picture')->store('images/users', 'public');
         }
 
+        $data['roles_and_expertise'] = [
+            'roles' => $request->get('roles', []),
+            'expertise' => $request->get('expertise', []),
+        ];
+
         $user->update($data);
 
+        $user_array = $user->toArray();
+        $user_array['roles'] = $user->roles;
+        $user_array['expertise'] = $user->expertise;
         return response()->json([
             'success' => 1,
-            'user' => $user,
+            'user' => $user_array,
         ]);
     }
 }

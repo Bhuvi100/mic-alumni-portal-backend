@@ -6,6 +6,19 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ProjectStatusUpdateRequest extends FormRequest
 {
+    public function prepareForValidation()
+    {
+        $inputs = $this->all();
+
+        foreach ($inputs as $field => $input) {
+            if ($input == '' || $input == 'null' || $input == 'undefined') {
+                $inputs[$field] = null;
+            }
+        }
+
+        $this->merge($inputs);
+    }
+
     public function rules(): array
     {
         return [
@@ -35,7 +48,10 @@ class ProjectStatusUpdateRequest extends FormRequest
             'startup_name' => ['required_if:startup_status,1', 'nullable','string'],
             'company_registration_status' => ['required', 'boolean'],
             'company_name' => ['required_if:company_registration_status,1', 'nullable','string'],
-            'company_cin' => ['required_if:company_registration_status,1', 'nullable','string'],
+            'company_registration_type' => ['required_if:company_registration_status,1', 'nullable', 'string',
+                'in:Section 8 Company,Private entity,As Society (Registration Act 1860),As Trust'],
+            'company_registration_dpiit' => ['required_if:company_registration_status,1', 'nullable', 'boolean'],
+            'company_logo' => ['nullable', 'file', 'image']
         ];
     }
 

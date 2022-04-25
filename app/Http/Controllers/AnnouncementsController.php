@@ -22,7 +22,7 @@ class AnnouncementsController extends Controller
 
     public function index()
     {
-        $announcements = Announcement::latest()->with('user:id,name')->get()->groupBy('status');
+        $announcements = Announcement::with('user:id,name')->orderBy('status')->paginate(15);
 
         return response()->json($announcements);
     }

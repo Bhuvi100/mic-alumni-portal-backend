@@ -63,7 +63,7 @@ class StoriesController extends Controller
 
     public function index()
     {
-        return response()->json(Story::with('user')->orderByDesc('display')->get());
+        return response()->json(Story::with('user')->orderByDesc('display')->paginate(2));
     }
 
     public function show(?User $user)

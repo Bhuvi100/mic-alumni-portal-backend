@@ -12,8 +12,8 @@ class ProjectsController extends Controller
         return response()->json($user->projects()
             ->get()
             ->mapWithKeys(function($project) {
-                $array = $project->get(['projects.id', 'team_name', 'title'])->toArray()[0];
-                $array['initiative'] =  $project->initiative->get(['hackathon', 'edition'])[0];
+                $array = $project->get(['projects.id', 'team_name', 'title', 'ps_title', 'description', 'college', 'leader_id'])->toArray()[0];
+                $array['initiative'] =  $project->initiative;
 
                 return [$project['id'] => $array];
             }));
