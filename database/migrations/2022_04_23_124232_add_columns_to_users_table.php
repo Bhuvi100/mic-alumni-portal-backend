@@ -10,7 +10,7 @@ class AddColumnsToUsersTable extends Migration
     {
         Schema::table('users',function (Blueprint $table) {
             $table->after('role', function ($table){
-                $table->enum('employment_status',['Self employed','Salarised Individual'])->nullable();
+                $table->enum('employment_status',['Self employed','Salaried Individual'])->nullable();
                 $table->enum('degree',['UG','PG','Ph.D'])->nullable();
                 $table->string('organization_name')->nullable();
                 $table->string('designation')->nullable();

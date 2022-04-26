@@ -36,7 +36,7 @@ class UserUpdateRequest extends FormRequest
             'phone' => ['required', 'digits:10, 15', 'numeric'],
             'gender' => ['required', 'in:male,female,other'],
             'picture' => ['sometimes', 'nullable', 'file', 'mimes:jpg,jpeg,png'],
-            'employment_status' => ['required', 'in:Self employed,Salarised Individual'],
+            'employment_status' => ['required', 'in:Self employed,Salaried Individual'],
             'degree' => ['required', 'in:UG,PG,Ph.D'],
             'organization_name' => ['required', 'string', 'max:255'],
             'designation' => ['required', 'string', 'max:255'],
