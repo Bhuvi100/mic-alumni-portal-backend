@@ -100,9 +100,9 @@ class User extends Authenticatable
         return $this->hasOne(ParticipantStatus::class);
     }
 
-    public function story()
+    public function stories()
     {
-        return $this->hasOne(Story::class);
+        return $this->hasMany(Story::class);
     }
 
     public function projects_as_leader()

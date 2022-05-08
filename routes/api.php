@@ -35,8 +35,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('status', [\App\Http\Controllers\ParticipantStatusesController::class, 'store'])->name('status.store');
     Route::post('status/{status}', [\App\Http\Controllers\ParticipantStatusesController::class, 'update'])->name('status.update');
 
-    Route::get('user/story', [\App\Http\Controllers\StoriesController::class, 'show']);
-    Route::post('user/story', [\App\Http\Controllers\StoriesController::class, 'update']);
+    Route::get('user/stories', [\App\Http\Controllers\StoriesController::class, 'show']);
+    Route::post('user/stories', [\App\Http\Controllers\StoriesController::class, 'store']);
+    Route::post('user/stories/{story}', [\App\Http\Controllers\StoriesController::class, 'update']);
 
     Route::middleware('admin')->group(function () {
         Route::get('imports', [\App\Http\Controllers\ImportsController::class, 'index']);
@@ -56,7 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('users/export', [\App\Http\Controllers\UserController::class, 'exportData']);
         Route::get('/users/{user}', [\App\Http\Controllers\UserController::class, 'show']);
         Route::get('users/{user}/status', [\App\Http\Controllers\ParticipantStatusesController::class, 'show']);
-        Route::get('users/{user}/story', [\App\Http\Controllers\StoriesController::class, 'show']);
+        Route::get('users/{user}/stories', [\App\Http\Controllers\StoriesController::class, 'show']);
         Route::get('stats', \App\Http\Controllers\StatisticsController::class);
     });
 
@@ -66,3 +67,6 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/login', \App\Http\Controllers\LoginController::class);
 Route::get('/announcements/{announcement}', [\App\Http\Controllers\AnnouncementsController::class, 'show']);
 
+Route::get('/test', function () {
+    return new \App\Mail\MagicLoginMail('google.com');
+});

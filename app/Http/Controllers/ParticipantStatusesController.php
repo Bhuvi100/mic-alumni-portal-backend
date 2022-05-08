@@ -39,7 +39,7 @@ class ParticipantStatusesController extends Controller
     public function store(ParticipantStatusUpdateRequest $request) {
         $image = $request->file('project_image')->store('images/own_ideas');
 
-        return auth()->user()->status()->create($request->except('project_image') + ['project_image' => $image]);
+        return response()->json(auth()->user()->status()->create($request->except('project_image') + ['project_image' => $image]));
     }
 
     public function update(ParticipantStatusUpdateRequest $request, ParticipantStatus $status)

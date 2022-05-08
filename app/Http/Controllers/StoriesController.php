@@ -70,10 +70,31 @@ class StoriesController extends Controller
     {
         $user = $user->id ? $user : auth()->user();
 
-        return response()->json($user->story()->exists() ? $user->story : []);
+        return response()->json($user->stories()->exists() ?
+            $user->stories()->get()->mapWithKeys(function ($story) {
+                $array = [
+                    'title' => $story->title,
+                    'description' => $story->description,
+                ];
+
+                return [$story->id => $array];
+            }) :
+            []);
     }
 
-    public function update(Request $request)
+    public function store(Request $request)
+    {
+        $validated = $request->validate(
+            [
+                'title' => ['required', 'string'],
+                'description' => ['required', 'string'],
+            ]
+        );
+
+        return response()->json(auth()->user()->stories()->create($validated));
+    }
+
+    public function update(Request $request, Story $story)
     {
         $user = auth()->user();
 
@@ -84,11 +105,7 @@ class StoriesController extends Controller
             ]
         );
 
-        if ($user->story()->exists()) {
-            $user->story()->update($validated);
-        } else {
-            $user->story()->create($validated);
-        }
+        $story->update($validated);
 
         $alumni_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
             ->where('display', 'alumni')->limit(3)->get();
