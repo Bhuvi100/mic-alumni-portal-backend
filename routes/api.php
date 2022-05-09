@@ -28,8 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('projects/{project}/status', [\App\Http\Controllers\ProjectStatusController::class, 'show']);
     Route::post('projects/{project}/status', [\App\Http\Controllers\ProjectStatusController::class, 'update']);
 
-    Route::get('projects/{project}/feedback', [\App\Http\Controllers\FeedbackController::class, 'show']);
-    Route::post('projects/{project}/feedback', [\App\Http\Controllers\FeedbackController::class, 'update']);
+    Route::get('users/feedback', [\App\Http\Controllers\FeedbackController::class, 'show']);
+    Route::post('users/feedback', [\App\Http\Controllers\FeedbackController::class, 'update']);
 
     Route::get('status', [\App\Http\Controllers\ParticipantStatusesController::class, 'index'])->name('status.index');
     Route::post('status', [\App\Http\Controllers\ParticipantStatusesController::class, 'store'])->name('status.store');
@@ -50,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('stories', [\App\Http\Controllers\StoriesController::class, 'index']);
         Route::post('stories/{story}/update_display', [\App\Http\Controllers\StoriesController::class, 'updateDisplay']);
 
-        Route::get('projects/{project}/users/{user}/feedback', [\App\Http\Controllers\FeedbackController::class, 'show']);
+        Route::get('users/{user}/feedback', [\App\Http\Controllers\FeedbackController::class, 'show']);
 
         Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
         Route::post('/users', [\App\Http\Controllers\UserController::class, 'index']);

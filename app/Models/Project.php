@@ -44,21 +44,6 @@ class Project extends Model
         return $this->hasOne(ProjectStatus::class);
     }
 
-    public function feedbacks()
-    {
-        return $this->hasMany(Feedback::class);
-    }
-
-    public function feedbackOfAuthUser()
-    {
-        return $this->feedbacks()->firstWhere('user_id', auth()->id());
-    }
-
-    public function feedbackOfUser(User $user)
-    {
-        return $this->feedbacks()->firstWhere('user_id', $user->id);
-    }
-
     public function is_permitted(User $user)
     {
         return in_array($user->id, $this->users()->pluck('users.id')->toArray(),false);

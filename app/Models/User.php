@@ -92,7 +92,7 @@ class User extends Authenticatable
 
     public function feedback()
     {
-        return $this->hasMany(Feedback::class);
+        return $this->hasOne(Feedback::class);
     }
 
     public function status()

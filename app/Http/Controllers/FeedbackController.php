@@ -8,28 +8,26 @@ use App\Models\User;
 
 class FeedbackController extends Controller
 {
-    public function show(Project $project, ?User $user)
+    public function show(?User $user)
     {
-        authorize_action($project, $user);
+        $user = $user->id ? $user : auth()->user();
 
-        return response()->json($user->id ?
-            $user->feedback()->firstWhere('project_id', $project->id) :
-            $project->feedbackOfAuthUser());
+        authorize_action($user);
+
+        return response()->json($user->feedback);
     }
 
 
-    public function update(FeedbackUpdateRequest $request, Project $project)
+    public function update(FeedbackUpdateRequest $request)
     {
-        authorize_action($project);
+        $user = auth()->user();
 
-        $feedback = $project->feedbackOfAuthUser();
-
-        if ($feedback) {
-            $feedback->update($request->validated());
+        if ($user->feedback()->exists()) {
+            $user->feedback->update($request->validated());
         } else {
-            $feedback = $project->feedbacks()->create($request->validated() + ['user_id' => auth()->id()]);
+            $user->feedback()->create($request->validated());
         }
 
-        return $feedback;
+        return response()->json($user->feedback);
     }
 }
