@@ -75,6 +75,7 @@ class StoriesController extends Controller
                 $array = [
                     'title' => $story->title,
                     'description' => $story->description,
+                    'status' => $story->display
                 ];
 
                 return [$story->id => $array];
