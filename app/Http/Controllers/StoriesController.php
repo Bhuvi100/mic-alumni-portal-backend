@@ -12,9 +12,9 @@ class StoriesController extends Controller
     public function public_index()
     {
         $stories = \Cache::rememberForever('stories_public', function () {
-            $alumni_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
+            $alumni_stories = Story::select(['title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation'])
                 ->where('display', 'alumni')->limit(3)->get();
-            $mentor_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
+            $mentor_stories = Story::select(['title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation'])
                 ->where('display', 'mentor')->limit(3)->get();
 
             return [
@@ -35,9 +35,9 @@ class StoriesController extends Controller
         }
 
         $stories = \Cache::rememberForever('stories_public', function () {
-            $alumni_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
+            $alumni_stories = Story::select(['title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation'])
                 ->where('display', 'alumni')->limit(3)->get();
-            $mentor_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
+            $mentor_stories = Story::select(['title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation'])
                 ->where('display', 'mentor')->limit(3)->get();
 
             return [
@@ -48,14 +48,28 @@ class StoriesController extends Controller
 
         if ($id < 4) {
             if (isset($stories['alumni'][$id - 1])) {
-                return response()->json($stories['alumni'][$id - 1]);
+                $story = $stories['alumni'][$id - 1];
+                $hackathons = implode(', ', $story->user->projects->map(function($project) {
+                    return $project->initiative->hackathon . ' ' . $project->initiative->edition;
+                })->toArray());
+
+                $final_array = $story->toArray() + ['hackathons' => $hackathons];
+                unset($final_array['user']['projects']);
+                return response()->json($final_array);
             }
 
             return abort(404);
         }
 
         if (isset($stories['mentor'][$id - 4])) {
-            return response()->json($stories['mentor'][$id - 4]);
+            $story = $stories['mentor'][$id - 4];
+            $hackathons = implode(', ', $story->user->projects->map(function($project) {
+                return $project->initiative->hackathon . ' ' . $project->initiative->edition;
+            })->toArray());
+
+            $final_array = $story->toArray() + ['hackathons' => $hackathons];
+            unset($final_array['user']['projects']);
+            return response()->json($final_array);
         }
 
         return abort(404);
@@ -108,9 +122,9 @@ class StoriesController extends Controller
 
         $story->update($validated);
 
-        $alumni_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
+        $alumni_stories = Story::select(['title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation'])
             ->where('display', 'alumni')->limit(3)->get();
-        $mentor_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
+        $mentor_stories = Story::select(['title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation'])
             ->where('display', 'mentor')->limit(3)->get();
 
         \Cache::put('stories_public', [
@@ -133,9 +147,9 @@ class StoriesController extends Controller
             'display' => $request->display,
         ]);
 
-        $alumni_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
+        $alumni_stories = Story::select(['title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation',])
             ->where('display', 'alumni')->limit(3)->get();
-        $mentor_stories = Story::select(['title', 'description', 'user_id'])->with('user:id,name,picture')
+        $mentor_stories = Story::select(['title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation', ])
             ->where('display', 'mentor')->limit(3)->get();
 
         \Cache::put('stories_public', [
