@@ -77,7 +77,7 @@ class StoriesController extends Controller
 
     public function index()
     {
-        return response()->json(Story::with('user')->orderByDesc('display')->paginate(2));
+        return response()->json(Story::with('user')->orderByDesc('display')->paginate(15));
     }
 
     public function show(?User $user)
