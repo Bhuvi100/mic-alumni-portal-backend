@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/announcements/public', [\App\Http\Controllers\AnnouncementsController::class, 'public_index']);
-Route::get('/stories/public', [\App\Http\Controllers\StoriesController::class, 'public_index']);
-Route::get('/stories/public/{id}', [\App\Http\Controllers\StoriesController::class, 'public_show']);
+Route::get('/stories/public', [\App\Http\Controllers\StoriesController::class, 'public_home']);
+Route::get('/stories/public/index/{display}', [\App\Http\Controllers\StoriesController::class, 'public_index']);
+Route::get('/stories/public/{story}', [\App\Http\Controllers\StoriesController::class, 'public_show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [\App\Http\Controllers\UserController::class, 'show']);
@@ -47,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('announcements', \App\Http\Controllers\AnnouncementsController::class);
         Route::get('initiatives/{initiative}/stats', [\App\Http\Controllers\InitiativesController::class, 'getStats']);
         Route::resource('initiatives', \App\Http\Controllers\InitiativesController::class);
+        Route::get('stories', [\App\Http\Controllers\StoriesController::class, 'index']);
         Route::get('stories', [\App\Http\Controllers\StoriesController::class, 'index']);
         Route::post('stories/{story}/update_display', [\App\Http\Controllers\StoriesController::class, 'updateDisplay']);
 
