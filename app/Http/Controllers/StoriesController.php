@@ -53,7 +53,17 @@ class StoriesController extends Controller
 
     public function index()
     {
-        return response()->json(Story::with('user')->orderByDesc('display')->paginate(15));
+        $total_count = Story::count();
+        $unpublished_count = Story::where('display', 'none')->count();
+        $published_count = $total_count - $unpublished_count;
+
+        return response()->json([
+            'counts' => [
+                'total' => $total_count,
+                'published' => $published_count,
+                'unpublished' => $unpublished_count,
+            ],
+            'stories' => Story::with('user')->orderByDesc('display')->paginate(15)]);
     }
 
     public function show(?User $user)

@@ -22,9 +22,3 @@ Route::get(
     config('laravel-passwordless-login.login_route'),
     [\App\Http\Controllers\ValidateLoginController::class, 'login']
 )->middleware('web')->name(config('laravel-passwordless-login.login_route_name'));
-
-Route::get('/test', function () {
-   return response()->make('<form method="post" action="/test" enctype="multipart/form-data"> {{ csrf() }} <input name="file" type="file"><input type="submit"></form>');
-});
-
-Route::post('/test', [\App\Http\Controllers\ImportsController::class, 'import']);

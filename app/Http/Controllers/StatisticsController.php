@@ -18,7 +18,10 @@ class StatisticsController extends Controller
                           SELECT 'patents' as type, COUNT(id) as count from projects WHERE exists (select * from project_status where project_status.project_id = projects.id and project_status.is_patent_registered = 1) UNION
                           SELECT 'startups' as type, COUNT(id) as count from projects WHERE exists (select * from project_status where project_status.project_id = projects.id and project_status.startup_status = 1) UNION
                           SELECT 'users' as type, COUNT(id) as count from users where role = 'user' UNION 
-                          SELECT 'users_registered' as type, COUNT(id) as count from users where role = 'user' and signed_up_at is not null");
+                          SELECT 'users_registered' as type, COUNT(id) as count from users where role = 'user' and signed_up_at is not null UNION
+                          SELECT 'feedbacks' as feedbacks, COUNT(id) as count from feedbacks UNION
+                          SELECT 'other_ideas' as other_ideas, COUNT(id) as count from participant_status                                            
+                          ");
 
             $r = [];
             foreach ($query as $q) {
