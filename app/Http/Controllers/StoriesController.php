@@ -44,6 +44,8 @@ class StoriesController extends Controller
             return $project->initiative->hackathon . ' ' . $project->initiative->edition;
         })->toArray());
 
+        $story->load(['user:id,name,picture,organization_name,designation']);
+
         $final_array = $story->toArray() + ['hackathons' => $hackathons];
         unset($final_array['user']['projects']);
         return response()->json($final_array);
