@@ -8,6 +8,11 @@ use App\Models\User;
 
 class ParticipantStatusesController extends Controller
 {
+    public function admin_index()
+    {
+        return response()->json(ParticipantStatus::latest()->select(['id', 'user_id', 'project_title', 'project_theme', 'project_ip_generated', 'project_incubated', 'project_funding_support'])->with('user:id,name,email')->paginate(15));
+    }
+
     public function index() {
         return auth()->user()->status()->get()->mapWithKeys(function ($project) {
             $array = [

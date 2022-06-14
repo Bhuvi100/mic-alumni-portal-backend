@@ -11,6 +11,7 @@ class Story extends Model
         'title',
         'description',
         'display',
+        'archive',
     ];
 
     public function user()

@@ -49,10 +49,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('initiatives/{initiative}/stats', [\App\Http\Controllers\InitiativesController::class, 'getStats']);
         Route::resource('initiatives', \App\Http\Controllers\InitiativesController::class);
         Route::get('stories', [\App\Http\Controllers\StoriesController::class, 'index']);
-        Route::get('stories', [\App\Http\Controllers\StoriesController::class, 'index']);
         Route::post('stories/{story}/update_display', [\App\Http\Controllers\StoriesController::class, 'updateDisplay']);
 
+        Route::get('feedbacks', [\App\Http\Controllers\FeedbackController::class, 'index']);
         Route::get('users/{user}/feedback', [\App\Http\Controllers\FeedbackController::class, 'show']);
+
+        Route::get('other-ideas', [\App\Http\Controllers\ParticipantStatusesController::class, 'admin_index']);
+        Route::get('hackathon-ideas', [\App\Http\Controllers\ProjectStatusController::class, 'index']);
 
         Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
         Route::post('/users', [\App\Http\Controllers\UserController::class, 'index']);

@@ -39,6 +39,11 @@ class Project extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function leader()
+    {
+        return $this->belongsTo(User::class, 'leader_id');
+    }
+
     public function project_status()
     {
         return $this->hasOne(ProjectStatus::class);

@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectStatusUpdateRequest;
 use App\Models\Project;
+use App\Models\ProjectStatus;
 
 class ProjectStatusController extends Controller
 {
+    public function index()
+    {
+        return response()->json(ProjectStatus::latest()->select(['id', 'ip_status', 'incubator_status', 'funding_support_needed', 'project_id',])->with('project:id,title,theme,leader_id', 'project.leader:id,name,email')->paginate(15));
+    }
+
     public function show(Project $project)
     {
         authorize_action($project);

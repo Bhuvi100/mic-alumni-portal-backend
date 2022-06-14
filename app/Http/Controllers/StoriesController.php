@@ -55,7 +55,8 @@ class StoriesController extends Controller
     {
         $total_count = Story::count();
         $unpublished_count = Story::where('display', 'none')->count();
-        $published_count = $total_count - $unpublished_count;
+        $archived_count = Story::where('display', 'archived')->count();
+        $published_count = $total_count - ($unpublished_count + $archived_count);
 
         return response()->json([
             'counts' => [
@@ -125,7 +126,7 @@ class StoriesController extends Controller
     {
         $request->validate(
             [
-                'display' => ['required', 'in:none,alumni,mentor']
+                'display' => ['required', 'in:none,alumni,mentor,archived']
             ]
         );
 
