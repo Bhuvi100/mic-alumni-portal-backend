@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class FeedbackUpdateRequest extends FormRequest
 {
@@ -27,14 +28,14 @@ class FeedbackUpdateRequest extends FormRequest
             'received_award' => ['required', 'boolean'],
             'award_name' => ['required_if:received_award,1', 'nullable', 'string'],
             'award_level' => ['required_if:received_award,1', 'nullable', 'string', 'in:State Level,National Level,International Level'],
-            'award_state' => ['required_if:award_level,State Level', 'nullable', 'string'],
-            'award_country' => ['required_if:award_level,International Level', 'nullable', 'string'],
+            'award_state' => [Rule::requiredIf($this->received_award == 1 && $this->award_level === 'State Level'), 'nullable', 'string'],
+            'award_country' => [Rule::requiredIf($this->received_award == 1 && $this->award_level === 'International Level'), 'nullable', 'string'],
             'ip_registration' => ['required', 'boolean'],
             'ip_type' => ['required_if:ip_registration,1', 'nullable', 'string', 'in:Patent,Copy Right,Trademark'],
             'ip_country' => ['required_if:ip_registration,1', 'nullable', 'string', 'in:India,Foreign'],
             'ip_status' => ['required_if:ip_registration,1', 'nullable', 'string', 'in:Applied,Filed,Granted,Register'],
             'registered_startup' => ['required', 'boolean'],
-            'registered_startups_count' => ['required_if:registered_startup,1', 'numeric', 'min:1'],
+            'registered_startups_count' => ['exclude_if:registered_startup,0', 'required_if:registered_startup,1', 'numeric', 'min:1'],
             'received_investment' => ['required', 'boolean'],
             'investment_level' => ['required_if:received_investment,1', 'nullable', 'string', 'in:Up to 10 Lakh,Up to 25 Lakh,Up to 50 Lakh,1 Crore,Greater than 1 Crore'],
             'recommend_others'  => ['required', 'in:Strongly Agree,Agree,May be,Disagree,Strongly Disagree'],

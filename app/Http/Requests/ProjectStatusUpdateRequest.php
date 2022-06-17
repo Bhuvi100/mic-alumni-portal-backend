@@ -37,7 +37,7 @@ class ProjectStatusUpdateRequest extends FormRequest
             'incubator_status' => ['required', 'boolean'],
             'name_of_incubator' => ['required_if:incubator_status,1', 'nullable','string'],
             'trl_level' => ['required', 'string'],
-            'video_url' => ['required', 'url'],
+            'video_url' => ['nullable'],
             'ip_status' => ['required', 'boolean'],
             'ip_type' => ['required_if:ip_status,1', 'nullable','string'],
             'is_patent_registered' => ['required_if:ip_status,1', 'nullable','boolean'],

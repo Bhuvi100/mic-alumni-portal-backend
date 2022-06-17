@@ -36,7 +36,7 @@ class ParticipantStatusUpdateRequest extends FormRequest
             'project_hackathon_related' => ['required', 'nullable', 'boolean'],
             'project_funding_support' => ['required', 'nullable', 'boolean'],
             'project_trl_level' => ['required', 'nullable', 'string'],
-            'project_video_url' => ['required', 'nullable', 'url'],
+            'project_video_url' => ['nullable'],
         ];
     }
 
