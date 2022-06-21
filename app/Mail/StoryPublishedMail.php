@@ -15,6 +15,8 @@ class StoryPublishedMail extends Mailable
 
     public function build()
     {
-        return $this->from('innovationcell@aicte-india.org', 'Innovation Cell, AICTE')->view('emails.story-published');
+        return $this->from('innovationcell@aicte-india.org', 'Innovation Cell, AICTE')
+            ->subject("Congratulations, your success story got published!")
+            ->view('emails.story-published');
     }
 }

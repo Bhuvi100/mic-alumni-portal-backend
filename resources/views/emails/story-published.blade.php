@@ -1,5 +1,3 @@
-<p>Congratulations, your success story got published in MIC's official alumni portal!</p>
-
 <p>We were captivated by your inspiring story, shouldn't we share it with the rest of the world?</p>
 
 <p>We have published your success story on our official alumni website (alumni.mic.gov.in) to persuade the younger generation and motivate them to participate and come up with more innovative ideas.</p>
