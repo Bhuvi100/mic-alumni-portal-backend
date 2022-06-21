@@ -11,7 +11,7 @@ class FeedbackController extends Controller
 {
     public function index()
     {
-        return response()->json(Feedback::latest()->select(['id', 'user_id', 'ip_registration', 'registered_startup', 'received_investment'])->with('user:id,name,email')->paginate(15));
+        return response()->json(Feedback::latest()->select(['id', 'user_id', 'ip_registration', 'registered_startup', 'received_investment', 'received_award', 'recommend_others'])->with('user:id,name,email,phone')->paginate(15));
     }
 
     public function show(?User $user)

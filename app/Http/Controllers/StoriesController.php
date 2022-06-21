@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Mail\StoryPublishedMail;
 use App\Models\Story;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -129,6 +130,11 @@ class StoriesController extends Controller
                 'display' => ['required', 'in:none,alumni,mentor,archived']
             ]
         );
+
+        if (($request->display === 'alumni' && $story->display !== 'mentor') ||
+            ($request->display === 'mentor' && $story->display !== 'alumni')) {
+            \Mail::to($story->user)->queue(new StoryPublishedMail(env('frontend_domain') . "/stories/{$story->id}"));
+        }
 
         $story->update([
             'display' => $request->display,
