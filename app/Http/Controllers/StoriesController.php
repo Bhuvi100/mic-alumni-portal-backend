@@ -133,7 +133,7 @@ class StoriesController extends Controller
 
         if (($request->display === 'alumni' && $story->display !== 'mentor') ||
             ($request->display === 'mentor' && $story->display !== 'alumni')) {
-            \Mail::to($story->user)->queue(new StoryPublishedMail(env('frontend_domain') . "/stories/{$story->id}"));
+            \Mail::to($story->user)->queue(new StoryPublishedMail(env('FRONTEND_DOMAIN') . "/stories/{$story->id}"));
         }
 
         $story->update([
