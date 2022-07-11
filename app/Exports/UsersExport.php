@@ -39,14 +39,11 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings
     {
         $initiatives = new Collection;
         $project_status = new Collection();
-        $feedback = new Collection();
 
         foreach ($user->projects as $project) {
             $initiatives->add("{$project->initiative->hackathon} - {$project->initiative->edition}");
             $status_submission = $project->project_status()->exists() ? 'yes' : 'no';
             $project_status->add("{$project->initiative->hackathon} - {$project->initiative->edition} => {$status_submission}");
-            $feedback_submission = $project->feedbackOfUser($user) ? 'yes' : 'no';
-            $feedback->add("{$project->initiative->hackathon} - {$project->initiative->edition} => {$feedback_submission}");
         }
 
         return [
@@ -59,7 +56,7 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings
             'signed_up_at' => $user->signed_up_at,
             'initiatives' => $initiatives->unique()->implode("\n"),
             'project_status' => $project_status->unique()->implode("\n"),
-            'feedback' => $feedback->unique()->implode("\n"),
+            'feedback' => $user->feedback()->exists() ? 'yes' : 'no',
             'participant_status' => $user->status()->exists() ? 'yes' : 'no',
         ];
     }
