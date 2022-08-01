@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Exports\StoriesExport;
 use App\Mail\StoryPublishedMail;
 use App\Models\Story;
 use App\Models\User;
@@ -151,5 +152,10 @@ class StoriesController extends Controller
         ]);
 
         return response()->json(Story::latest()->with('user')->orderBy('display')->get());
+    }
+
+    public function export()
+    {
+        return \Excel::download(new StoriesExport(), 'feedbacks.xlsx');
     }
 }

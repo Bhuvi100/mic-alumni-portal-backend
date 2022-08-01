@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\FeedbacksExport;
 use App\Http\Requests\FeedbackUpdateRequest;
 use App\Models\Feedback;
 use App\Models\Project;
@@ -35,5 +36,10 @@ class FeedbackController extends Controller
         }
 
         return response()->json($user->feedback);
+    }
+
+    public function export()
+    {
+        return \Excel::download(new FeedbacksExport(), 'feedbacks.xlsx');
     }
 }
