@@ -48,8 +48,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('announcements', \App\Http\Controllers\AnnouncementsController::class);
         Route::get('initiatives/{initiative}/stats', [\App\Http\Controllers\InitiativesController::class, 'getStats']);
         Route::resource('initiatives', \App\Http\Controllers\InitiativesController::class);
-        
+
         Route::get('stories', [\App\Http\Controllers\StoriesController::class, 'index']);
+        Route::get('stories/archived', [\App\Http\Controllers\StoriesController::class, 'archived_index']);
         Route::post('stories/{story}/update_display', [\App\Http\Controllers\StoriesController::class, 'updateDisplay']);
         Route::post('stories/export', [\App\Http\Controllers\StoriesController::class, 'export']);
 
