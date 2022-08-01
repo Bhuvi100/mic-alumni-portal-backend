@@ -14,12 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('chartData', \App\Http\Controllers\LandingStatistics::class);
+Route::get('chartYesOrNoData', \App\Http\Controllers\LandingYesorNoStatistics::class);
+
 Route::get('/announcements/public', [\App\Http\Controllers\AnnouncementsController::class, 'public_index']);
 Route::get('/stories/public', [\App\Http\Controllers\StoriesController::class, 'public_home']);
 Route::get('/stories/public/index/{display}', [\App\Http\Controllers\StoriesController::class, 'public_index']);
 Route::get('/stories/public/{story}', [\App\Http\Controllers\StoriesController::class, 'public_show']);
 
 Route::middleware('auth:sanctum')->group(function () {
+
+  
+
     Route::get('/user', [\App\Http\Controllers\UserController::class, 'show']);
     Route::post('/user/update', [\App\Http\Controllers\UserController::class, 'update']);
     Route::patch('/user/update', [\App\Http\Controllers\UserController::class, 'update']);
