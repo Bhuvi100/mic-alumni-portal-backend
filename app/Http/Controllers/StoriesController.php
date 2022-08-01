@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Exports\StoriesExport;
 use App\Mail\StoryPublishedMail;
 use App\Models\Story;
 use App\Models\User;
@@ -65,8 +66,25 @@ class StoriesController extends Controller
                 'published' => $published_count,
                 'unpublished' => $unpublished_count,
             ],
-            'stories' => Story::with('user')->orderByDesc('display')->paginate(15)]);
+            'stories' => Story::with('user')->where('display', '!=', 'archived')->orderByDesc('display')->paginate(15)]);
     }
+
+    public function archived_index()
+    {
+        $total_count = Story::count();
+        $unpublished_count = Story::where('display', 'none')->count();
+        $archived_count = Story::where('display', 'archived')->count();
+        $published_count = $total_count - ($unpublished_count + $archived_count);
+
+        return response()->json([
+            'counts' => [
+                'total' => $total_count,
+                'published' => $published_count,
+                'unpublished' => $unpublished_count,
+            ],
+            'stories' => Story::with('user')->where('display', '=', 'archived')->orderByDesc('display')->paginate(15)]);
+    }
+
 
     public function show(?User $user)
     {
@@ -151,5 +169,10 @@ class StoriesController extends Controller
         ]);
 
         return response()->json(Story::latest()->with('user')->orderBy('display')->get());
+    }
+
+    public function export()
+    {
+        return \Excel::download(new StoriesExport(), 'feedbacks.xlsx');
     }
 }

@@ -54,11 +54,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::resource('announcements', \App\Http\Controllers\AnnouncementsController::class);
         Route::get('initiatives/{initiative}/stats', [\App\Http\Controllers\InitiativesController::class, 'getStats']);
         Route::resource('initiatives', \App\Http\Controllers\InitiativesController::class);
+
         Route::get('stories', [\App\Http\Controllers\StoriesController::class, 'index']);
+        Route::get('stories/archived', [\App\Http\Controllers\StoriesController::class, 'archived_index']);
         Route::post('stories/{story}/update_display', [\App\Http\Controllers\StoriesController::class, 'updateDisplay']);
+        Route::post('stories/export', [\App\Http\Controllers\StoriesController::class, 'export']);
 
         Route::get('feedbacks', [\App\Http\Controllers\FeedbackController::class, 'index']);
         Route::get('users/{user}/feedback', [\App\Http\Controllers\FeedbackController::class, 'show']);
+        Route::post('feedbacks/export', [\App\Http\Controllers\FeedbackController::class, 'export']);
 
         Route::get('other-ideas', [\App\Http\Controllers\ParticipantStatusesController::class, 'admin_index']);
         Route::get('hackathon-ideas', [\App\Http\Controllers\ProjectStatusController::class, 'index']);
