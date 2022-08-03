@@ -125,10 +125,12 @@ class User extends Authenticatable
         return $this->id == $user->id;
     }
 
-    public static function filter()
+    public static function filter(array $filter = [])
     {
+        $filter = count($filter) ? $filter : request()->all();
+
         $query = self::query();
-        $filter_registered = \request()->get('registered', null);
+        $filter_registered = $filter['registered'] ?? null;
 
         if ($filter_registered) {
             $query->whereNotNull('signed_up_at');
@@ -140,19 +142,18 @@ class User extends Authenticatable
             ->join('projects', 'project_user.project_id', '=', 'projects.id')
             ->leftJoin('project_status', 'projects.id', '=', 'project_status.project_id');
 
-        if (\request()->get('bootstrapped', false)) {
+        if ($filter['bootstrapped'] ?? false) {
             $query->where('project_status.startup_status', true);
         }
 
-        if (\request()->get('funding', false) == true) {
+        if ($filter['funding'] ?? false == true) {
             $query->where('project_status.funding_support_needed', true);
         }
 
-        if (($initiatives = \request()->get('initiatives', [])) && is_array($initiatives) && (count($initiatives))) {
+        if (($initiatives = ($filter['initiatives'] ?? [])) && is_array($initiatives) && (count($initiatives))) {
             $query->whereIn('projects.initiative_id', $initiatives);
         }
 
         return $query->distinct();
-
     }
 }

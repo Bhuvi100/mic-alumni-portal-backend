@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Exports\UsersExport;
 use App\Http\Requests\UserUpdateRequest;
+use App\Jobs\UsersExportJob;
+use App\Mail\UserExportMail;
 use App\Models\User;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -68,7 +71,9 @@ class UserController extends Controller
 
     public function exportData()
     {
-        return Excel::download(new UsersExport, 'users.xlsx');
+        UsersExportJob::dispatch(auth()->user(), request()->all());
+
+        return response()->json(['status' => 'success']);
     }
 
 
