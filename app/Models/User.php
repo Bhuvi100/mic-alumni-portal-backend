@@ -125,6 +125,11 @@ class User extends Authenticatable
         return $this->id == $user->id;
     }
 
+    public function mentorWillingness()
+    {
+        return $this->hasMany(MentorWillingness::class);
+    }
+
     public static function filter(array $filter = [])
     {
         $filter = count($filter) ? $filter : request()->all();

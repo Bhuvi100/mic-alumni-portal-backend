@@ -83,6 +83,7 @@ class UserController extends Controller
         $user_array = $user->toArray();
         $user_array['roles'] = $user->roles;
         $user_array['expertise'] = $user->expertise;
+        $user_array['mentor_willingness_filled'] = (bool)auth()->user()->mentorWillingness->where('hackathon','SIH 2022')->first();
 
         return response()->json([
             'user' => $user_array,

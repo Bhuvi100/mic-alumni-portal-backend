@@ -14,18 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('chartData', \App\Http\Controllers\LandingStatistics::class);
-Route::get('chartYesOrNoData', \App\Http\Controllers\LandingYesorNoStatistics::class);
-
 Route::get('/announcements/public', [\App\Http\Controllers\AnnouncementsController::class, 'public_index']);
 Route::get('/stories/public', [\App\Http\Controllers\StoriesController::class, 'public_home']);
 Route::get('/stories/public/index/{display}', [\App\Http\Controllers\StoriesController::class, 'public_index']);
 Route::get('/stories/public/{story}', [\App\Http\Controllers\StoriesController::class, 'public_show']);
 
+Route::get('chartData', \App\Http\Controllers\LandingStatistics::class);
+Route::get('chartYesOrNoData', \App\Http\Controllers\LandingYesorNoStatistics::class);
+
 Route::middleware('auth:sanctum')->group(function () {
-
-  
-
     Route::get('/user', [\App\Http\Controllers\UserController::class, 'show']);
     Route::post('/user/update', [\App\Http\Controllers\UserController::class, 'update']);
     Route::patch('/user/update', [\App\Http\Controllers\UserController::class, 'update']);
@@ -46,7 +43,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('user/stories', [\App\Http\Controllers\StoriesController::class, 'store']);
     Route::post('user/stories/{story}', [\App\Http\Controllers\StoriesController::class, 'update']);
 
+    Route::get('mentor_willingness', [\App\Http\Controllers\MentorWillingnessesController::class, 'show']);
+    Route::post('mentor_willingness', [\App\Http\Controllers\MentorWillingnessesController::class, 'store']);
+
     Route::middleware('admin')->group(function () {
+        Route::get('mentor_willingness/{user}', [\App\Http\Controllers\MentorWillingnessesController::class, 'show']);
+
         Route::get('imports', [\App\Http\Controllers\ImportsController::class, 'index']);
         Route::post('imports', [\App\Http\Controllers\ImportsController::class, 'import']);
         Route::post('imports/sample/download', [\App\Http\Controllers\ImportsController::class, 'download_sample']);
