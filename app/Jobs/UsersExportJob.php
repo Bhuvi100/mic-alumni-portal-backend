@@ -20,17 +20,25 @@ class UsersExportJob implements ShouldQueue
 
     public User $user;
     public array $filter;
+    public bool $withMentorWillingness = false;
 
     public function __construct(User $user, array $filter)
     {
         $this->user = $user;
         $this->filter = $filter;
+        $this->withMentorWillingness = (bool)request()->get('mentor_willingness');
     }
 
     public  function usersGenerator() {
-        foreach (User::filter($this->filter)->distinct()
-                     ->with(['projects.initiative:id,hackathon,edition'])
-                     ->select('users.*')->lazy(1000) as $user) {
+        $query = User::filter($this->filter)->distinct()
+            ->with(['projects.initiative:id,hackathon,edition'])
+            ->select('users.*');
+
+        if ($this->withMentorWillingness) {
+            $query->with('mentorWillingnessSih2022');
+        }
+
+        foreach ($query->lazy(1000) as $user) {
             yield $user;
         }
     }
@@ -73,6 +81,13 @@ class UsersExportJob implements ShouldQueue
             ];
 
             unset($initiatives_string, $status_string);
+
+            if ($this->withMentorWillingness) {
+                $data['interested_SIH2022'] = $user->mentorWillingnessSih2022->first()->interested ? 'Yes' : 'No';
+                $data['category'] = $user->mentorWillingnessSih2022->first()->category;
+                $data['nodal_center'] = $user->mentorWillingnessSih2022->first()->nodal_center;
+                $data['associate'] = $user->mentorWillingnessSih2022->first()->associate;
+            }
 
             return $data;
         });

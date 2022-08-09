@@ -3,19 +3,26 @@
 namespace App\Exports;
 
 use App\Models\User;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Builder;
+use Iterator;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromIterator;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithCustomChunkSize;
 
-class UsersExport implements FromCollection, WithMapping, WithHeadings
+class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustomChunkSize, ShouldQueue
 {
+    use Exportable;
+
     /**
-     * @return \Illuminate\Support\Collection
+     * @returns Builder
      */
-    public function collection()
+    public function itertor()
     {
-        return User::filter()->with('projects.initiative')->get('users.*');
+//        return User::filter()->with('projects.initiative')->select('users.*');'//
+//        return User::filter()->select('users.*')->lazy(1000);
     }
 
     public function headings(): array
@@ -37,14 +44,14 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings
 
     public function map($user): array
     {
-        $initiatives = new Collection;
-        $project_status = new Collection();
-
-        foreach ($user->projects as $project) {
-            $initiatives->add("{$project->initiative->hackathon} - {$project->initiative->edition}");
-            $status_submission = $project->project_status()->exists() ? 'yes' : 'no';
-            $project_status->add("{$project->initiative->hackathon} - {$project->initiative->edition} => {$status_submission}");
-        }
+//        $initiatives = new Collection();
+//        $project_status = new Collection();
+//
+//        foreach ($user->projects as $project) {
+//            $initiatives->add("{$project->initiative->hackathon} - {$project->initiative->edition}");
+//            $status_submission = $project->project_status()->exists() ? 'yes' : 'no';
+//            $project_status->add("{$project->initiative->hackathon} - {$project->initiative->edition} => {$status_submission}");
+//        }
 
         return [
             'id' => $user->id,
@@ -54,10 +61,20 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings
             'phone' => $user->phone,
             'gender' => $user->gender,
             'signed_up_at' => $user->signed_up_at,
-            'initiatives' => $initiatives->unique()->implode("\n"),
-            'project_status' => $project_status->unique()->implode("\n"),
-            'feedback' => $user->feedback()->exists() ? 'yes' : 'no',
-            'participant_status' => $user->status()->exists() ? 'yes' : 'no',
+//            'initiatives' => $initiatives->unique()->implode("\n"),
+//            'project_status' => $project_status->unique()->implode("\n"),
+//            'feedback' => $user->feedback()->exists() ? 'yes' : 'no',
+//            'participant_status' => $user->status()->exists() ? 'yes' : 'no',
         ];
+    }
+
+    public function chunkSize(): int
+    {
+        return 1000;
+    }
+
+    public function iterator(): Iterator
+    {
+        return User::filter()->select('users.*')->lazy(1000);
     }
 }

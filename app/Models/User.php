@@ -130,6 +130,11 @@ class User extends Authenticatable
         return $this->hasMany(MentorWillingness::class);
     }
 
+    public function mentorWillingnessSih2022()
+    {
+        return $this->hasMany(MentorWillingness::class)->where('hackathon', 'SIH 2022');
+    }
+
     public static function filter(array $filter = [])
     {
         $filter = count($filter) ? $filter : request()->all();
@@ -157,6 +162,10 @@ class User extends Authenticatable
 
         if (($initiatives = ($filter['initiatives'] ?? [])) && is_array($initiatives) && (count($initiatives))) {
             $query->whereIn('projects.initiative_id', $initiatives);
+        }
+
+        if ($filter['mentor_willingness']) {
+            $query->whereHas('mentorWillingnessSih2022');
         }
 
         return $query->distinct();
