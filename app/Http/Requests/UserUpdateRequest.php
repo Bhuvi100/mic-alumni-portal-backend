@@ -17,11 +17,11 @@ class UserUpdateRequest extends FormRequest
             }
         }
 
-        if ($inputs['roles']) {
+        if ($inputs['roles'] ?? false) {
             $inputs['roles'] = explode(',', $inputs['roles']);
         }
 
-        if ($inputs['expertise']) {
+        if ($inputs['expertise'] ?? false) {
             $inputs['expertise'] = explode(',', $inputs['expertise']);
         }
 
