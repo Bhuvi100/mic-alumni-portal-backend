@@ -13,43 +13,35 @@ class LandingYesorNoStatistics extends Controller
      * Handle the incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function __invoke(Request $request)
     {
-        $questions = array(
-            "hired_by_ministry",
-            "helped_placement",
-            "ministry_internship",
-            "helped_internship",
-            "higher_studies",
-            "received_award",
-            "ip_registration",
-            "registered_startup",
-            "received_investment",
-            );
-            $options = array(
-                1,
-                0,
-                "Yes",
-                "No"   
+        $dataMain = \Cache::remember('landing_yes_or_no', 3600 * 6, function() {
+            $questions = array(
+                "helped_placement",
+                "ministry_internship",
+                "helped_internship",
             );
 
             $dataMain = array();
-            for($i=1;$i<=2;$i++){
-                $dataMain[$options[$i+1]]= array(
-                    Feedback::where($questions[0], '=', $options[$i-1])->get()->count(),
-                    Feedback::where($questions[1], '=', $options[$i-1])->get()->count(),
-                    Feedback::where($questions[2], '=', $options[$i-1])->get()->count(),
-                    Feedback::where($questions[3], '=', $options[$i-1])->get()->count(),
-                    Feedback::where($questions[4], '=', $options[$i-1])->get()->count(),
-                    Feedback::where($questions[5], '=', $options[$i-1])->get()->count(),
-                    Feedback::where($questions[6], '=', $options[$i-1])->get()->count(),
-                    Feedback::where($questions[7], '=', $options[$i-1])->get()->count(),
-                    Feedback::where($questions[8], '=', $options[$i-1])->get()->count(),
-                   
-                );
+
+            $count_string = '';
+
+            foreach ($questions as $field) {
+                $count_string .= "count(CASE WHEN $field = 1 then 1 ELSE NULL END) as $field,";
             }
+
+            $stats = Feedback::selectRaw("$count_string count(id) as total_count")->get()->toArray()[0];
+
+            foreach ($questions as $field) {
+                $dataMain['Yes'][] = $stats[$field];
+                $dataMain['No'][] = $stats['total_count'] - $stats[$field];
+            }
+
+            return $dataMain;
+        });
+
         return response()->json($dataMain);
     }
 }
