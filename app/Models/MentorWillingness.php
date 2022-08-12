@@ -15,7 +15,8 @@ class MentorWillingness extends Model
         'category',
         'nodal_center',
         'associate',
-
+        'city',
+        'state',
     ];
 
     public function user()

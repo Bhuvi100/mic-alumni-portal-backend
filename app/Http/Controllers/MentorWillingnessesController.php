@@ -17,6 +17,8 @@ class MentorWillingnessesController extends Controller
             'category' => ['nullable', 'required_if:interested,1', 'in:sw,hw'],
             'nodal_center' => ['nullable', 'required_if:interested,1', Rule::in(array_keys(MentorWillingness::$nodal_centers))],
             'associate' => ['nullable', 'required_if:interested,1', 'in:Evaluator,Mentor,Design Expert'],
+            'city' => ['nullable', 'required_if:interested,1', 'string'],
+            'state' => ['nullable', 'required_if:interested,1', 'string']
         ]);
 
         if (!auth()->user()->mentorWillingness()->exists() && $request->interested == 1) {
