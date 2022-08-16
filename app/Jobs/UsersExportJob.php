@@ -60,11 +60,11 @@ class UsersExportJob implements ShouldQueue
 
             foreach ($user->projects->load('project_status:id,project_id') as $project) {
                 $initiatives[] = "{$project->initiative->hackathon} - {$project->initiative->edition}";
-                $status = $project->project_status?->first();
+                $status = $project->project_status;
                 $status_submission = $status ? 'yes' : 'no';
                 $project_status[] = "{$project->initiative->hackathon} - {$project->initiative->edition} => {$status_submission}";
 
-                if ($status->startup_status) {
+                if ($status?->startup_status) {
                     $startup_exists = true;
                 }
             }
