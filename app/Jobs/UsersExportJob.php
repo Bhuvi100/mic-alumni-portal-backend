@@ -37,7 +37,7 @@ class UsersExportJob implements ShouldQueue
 
         if ($this->withMentorWillingness) {
             $query->with('mentorWillingnessSih2022')
-                ->whereRelation('mentorWillingness', '!=', null);
+                ->whereRelation('mentorWillingness', 'city', '!=', null);
         }
 
         foreach ($query->lazy(1000) as $user) {
