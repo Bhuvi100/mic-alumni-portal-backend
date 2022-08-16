@@ -72,7 +72,7 @@ class UsersExportJob implements ShouldQueue
             if (!$startup_exists && $user->feedback?->registered_startup) {
                     $startup_exists = true;
             } else {
-                foreach ($user->status as $own_idea) {
+                foreach ($user->status ?? [] as $own_idea) {
                     if ($own_idea->project_incubated) {
                         $startup_exists = true;
                     }
