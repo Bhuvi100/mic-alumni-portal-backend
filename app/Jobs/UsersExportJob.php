@@ -100,7 +100,7 @@ class UsersExportJob implements ShouldQueue
                 'project_status' => $status_string,
                 'feedback' => $user->feedback()->exists() ? 'yes' : 'no',
                 'participant_status' => $user->status()->exists() ? 'yes' : 'no',
-                'has_startup' => $startup_exists
+                'has_startup' => $startup_exists ? 'yes' : 'no',
             ];
 
             unset($initiatives_string, $status_string);
