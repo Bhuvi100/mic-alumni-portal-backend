@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Rap2hpoutre\FastExcel\FastExcel;
+use function Symfony\Component\Translation\t;
 
 class UsersExportJob implements ShouldQueue
 {
@@ -35,7 +36,8 @@ class UsersExportJob implements ShouldQueue
             ->select('users.*');
 
         if ($this->withMentorWillingness) {
-            $query->with('mentorWillingnessSih2022');
+            $query->with('mentorWillingnessSih2022')
+                ->whereRelation('mentorWillingness', '!=', null);
         }
 
         foreach ($query->lazy(1000) as $user) {
@@ -54,11 +56,27 @@ class UsersExportJob implements ShouldQueue
         $file = (new FastExcel($this->usersGenerator()))->export(Storage::disk('local')->path('users.xlsx'), function ($user) {
             $initiatives = [];
             $project_status = [];
+            $startup_exists = false;
 
             foreach ($user->projects->load('project_status:id,project_id') as $project) {
                 $initiatives[] = "{$project->initiative->hackathon} - {$project->initiative->edition}";
-                $status_submission = $project->project_status?->first() ? 'yes' : 'no';
+                $status = $project->project_status?->first();
+                $status_submission = $status ? 'yes' : 'no';
                 $project_status[] = "{$project->initiative->hackathon} - {$project->initiative->edition} => {$status_submission}";
+
+                if ($status->startup_status) {
+                    $startup_exists = true;
+                }
+            }
+
+            if (!$startup_exists && $user->feedback?->registered_startup) {
+                    $startup_exists = true;
+            } else {
+                foreach ($user->status as $own_idea) {
+                    if ($own_idea->project_incubated) {
+                        $startup_exists = true;
+                    }
+                }
             }
 
             $initiatives_string = implode("\n", array_unique($initiatives));
@@ -74,10 +92,15 @@ class UsersExportJob implements ShouldQueue
                 'phone' => $user->phone,
                 'gender' => $user->gender,
                 'signed_up_at' => $user->signed_up_at,
+                'employment_status' => $user->employment_status,
+                'degree' => $user->degree,
+                'organization_name' => $user->organization_name,
+                'designation' => $user->designation,
                 'initiatives' => $initiatives_string,
                 'project_status' => $status_string,
                 'feedback' => $user->feedback()->exists() ? 'yes' : 'no',
                 'participant_status' => $user->status()->exists() ? 'yes' : 'no',
+                'has_startup' => $startup_exists
             ];
 
             unset($initiatives_string, $status_string);
@@ -87,6 +110,8 @@ class UsersExportJob implements ShouldQueue
                 $data['category'] = $user->mentorWillingnessSih2022->first()->category;
                 $data['nodal_center'] = $user->mentorWillingnessSih2022->first()->nodal_center;
                 $data['associate'] = $user->mentorWillingnessSih2022->first()->associate;
+                $data['state'] = $user->mentorWillingnessSih2022->first()->state;
+                $data['city'] = $user->mentorWillingnessSih2022->first()->city;
             }
 
             return $data;
