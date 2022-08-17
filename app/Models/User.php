@@ -97,7 +97,7 @@ class User extends Authenticatable
 
     public function status()
     {
-        return $this->hasOne(ParticipantStatus::class);
+        return $this->hasMany(ParticipantStatus::class);
     }
 
     public function stories()
