@@ -17,6 +17,8 @@ class MentorWillingness extends Model
         'associate',
         'city',
         'state',
+        'is_accepted',
+        'is_selected'
     ];
 
     public function user()
