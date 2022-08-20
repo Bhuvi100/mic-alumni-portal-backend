@@ -37,6 +37,7 @@ class UsersExportJob implements ShouldQueue
 
         if ($this->withMentorWillingness) {
             $query->with('mentorWillingnessSih2022')
+                ->whereRelation('mentorWillingness','is_selected', '=', true)
                 ->whereRelation('mentorWillingness', 'city', '!=', null);
         }
 
@@ -112,6 +113,7 @@ class UsersExportJob implements ShouldQueue
                 $data['associate'] = $user->mentorWillingnessSih2022->first()->associate;
                 $data['state'] = $user->mentorWillingnessSih2022->first()->state;
                 $data['city'] = $user->mentorWillingnessSih2022->first()->city;
+                $data['is_accepted'] = $user->mentorWillingnessSih2022->first()->is_accepted;
             }
 
             return $data;
