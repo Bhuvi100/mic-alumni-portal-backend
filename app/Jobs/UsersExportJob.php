@@ -113,7 +113,7 @@ class UsersExportJob implements ShouldQueue
                 $data['associate'] = $user->mentorWillingnessSih2022->first()->associate;
                 $data['state'] = $user->mentorWillingnessSih2022->first()->state;
                 $data['city'] = $user->mentorWillingnessSih2022->first()->city;
-                $data['is_accepted'] = $user->mentorWillingnessSih2022->first()->is_accepted;
+                $data['is_accepted'] = $user->mentorWillingnessSih2022->first()->is_accepted === null ? "Not responded" : ($user->mentorWillingnessSih2022->first()->is_accepted ? "Yes" : "No");
             }
 
             return $data;
