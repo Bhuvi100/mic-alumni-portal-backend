@@ -15,9 +15,9 @@ class StoriesController extends Controller
     {
         $stories = \Cache::rememberForever('stories_public', function () {
             $alumni_stories = Story::select(['id', 'title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation'])
-                ->where('display', 'alumni')->limit(3)->get();
+                ->where('display', 'alumni')->get();
             $mentor_stories = Story::select(['id', 'title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation'])
-                ->where('display', 'mentor')->limit(3)->get();
+                ->where('display', 'mentor')->get();
 
             return [
                 'alumni' => $alumni_stories,
