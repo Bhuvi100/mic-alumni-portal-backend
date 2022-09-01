@@ -159,9 +159,9 @@ class StoriesController extends Controller
         ]);
 
         $alumni_stories = Story::select(['id', 'title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation',])
-            ->where('display', 'alumni')->limit(3)->get();
+            ->where('display', 'alumni')->get();
         $mentor_stories = Story::select(['id', 'title', 'description', 'user_id'])->with(['user:id,name,picture,organization_name,designation', ])
-            ->where('display', 'mentor')->limit(3)->get();
+            ->where('display', 'mentor')->get();
 
         \Cache::put('stories_public', [
             'alumni' => $alumni_stories,
