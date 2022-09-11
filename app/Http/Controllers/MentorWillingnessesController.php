@@ -13,7 +13,12 @@ class MentorWillingnessesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'is_accepted' => ['required', 'boolean'],
+            'confirm_attended' => ['required', 'boolean'],
+            'nodal_center' => ['nullable', 'required_if:confirm_attended,1', 'string'],
+            'days_attended' => ['nullable', 'required_if:confirm_attended,1', 'numeric', 'min:1', 'max:5'],
+            'role' => ['nullable', 'required_if:confirm_attended,1', 'string', 'in:Evaluator,Mentor,Design Expert'],
+            'video_link' => ['nullable', 'required_if:confirm_attended,1', 'string', 'max:255'],
+            'feedback' => ['nullable', 'required_if:confirm_attended,1', 'string']
         ]);
 
         if (!auth()->user()->mentorWillingness()->exists()) {
@@ -22,11 +27,13 @@ class MentorWillingnessesController extends Controller
 
         $willingness = auth()->user()->mentorWillingness()->firstWhere('hackathon', 'SIH 2022');
 
-        if (!$willingness || !$willingness->interested || !$willingness->is_selected || $willingness->is_accepted !== null) {
+        if (!$willingness || !$willingness->interested || !$willingness->is_selected) {
             return abort(401);
         }
 
-        $willingness->update(['is_accepted' => $request->is_accepted]);
+        $willingness->feedback()->updateOrCreate(['mentor_id' => $willingness->id], $request->all());
+
+        $willingness->load('feedback');
 
         return response()->json($willingness);
     }
@@ -36,6 +43,6 @@ class MentorWillingnessesController extends Controller
         $user = $user?->id ? $user : auth()->user();
 
         return response()
-            ->json($user->mentorWillingness->where('hackathon', 'SIH 2022')->first() ?? []);
+            ->json($user->mentorWillingness()->with('feedback')->where('hackathon', 'SIH 2022')->first() ?? []);
     }
 }

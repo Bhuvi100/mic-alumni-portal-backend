@@ -106,4 +106,9 @@ class MentorWillingness extends Model
         'VIGNANA BHARATHI INSTITUTE OF TECHNOLOGY Telangana HYDERABAD' => 'SW',
         'VNR VIGNANA JYOTHI INSTITUTE OF ENGINEERING & TECHNOLOGY Telangana HYDERABAD' => 'SW',
     ];
+
+    public function feedback()
+    {
+        return $this->hasOne(MentorFeedback::class, 'mentor_id');
+    }
 }
