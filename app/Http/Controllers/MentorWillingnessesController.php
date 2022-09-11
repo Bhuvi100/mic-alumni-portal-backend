@@ -17,7 +17,7 @@ class MentorWillingnessesController extends Controller
             'nodal_center' => ['nullable', 'required_if:confirm_attended,1', 'string'],
             'days_attended' => ['nullable', 'required_if:confirm_attended,1', 'numeric', 'min:1', 'max:5'],
             'role' => ['nullable', 'required_if:confirm_attended,1', 'string', 'in:Evaluator,Mentor,Design Expert'],
-            'video_link' => ['nullable', 'required_if:confirm_attended,1', 'string', 'max:255'],
+            'video_link' => ['nullable', 'string', 'max:255'],
             'feedback' => ['nullable', 'required_if:confirm_attended,1', 'string']
         ]);
 
