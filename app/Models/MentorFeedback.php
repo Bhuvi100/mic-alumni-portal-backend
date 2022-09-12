@@ -13,6 +13,7 @@ class MentorFeedback extends Model
         'nodal_center',
         'role',
         'video_link',
+        'image',
         'feedback',
     ];
 

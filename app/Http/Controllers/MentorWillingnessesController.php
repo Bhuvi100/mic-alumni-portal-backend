@@ -18,6 +18,7 @@ class MentorWillingnessesController extends Controller
             'days_attended' => ['nullable', 'required_if:confirm_attended,1', 'numeric', 'min:1', 'max:5'],
             'role' => ['nullable', 'required_if:confirm_attended,1', 'string', 'in:Evaluator,Mentor,Design Expert'],
             'video_link' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'file', 'mimes:jpg,jpeg,png'],
             'feedback' => ['nullable', 'required_if:confirm_attended,1', 'string']
         ]);
 
@@ -31,7 +32,16 @@ class MentorWillingnessesController extends Controller
             return abort(401);
         }
 
-        $willingness->feedback()->updateOrCreate(['mentor_id' => $willingness->id], $request->all());
+        $feedback = $willingness->feedback()->updateOrCreate(['mentor_id' => $willingness->id], $request->except('image'));
+
+        if ($request->hasFile('image')) {
+            if ($feedback->image && \Storage::exists($feedback->image)) {
+                \Storage::delete($feedback->image);
+            }
+
+            $feedback->image = $request->file('image')->store('images/feedback');
+            $feedback->save();
+        }
 
         $willingness->load('feedback');
 

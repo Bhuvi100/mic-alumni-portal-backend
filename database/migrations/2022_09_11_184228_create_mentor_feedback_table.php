@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('nodal_center')->nullable();
             $table->string('role')->nullable();
             $table->string('video_link', 255)->nullable();
+            $table->string('image')->nullable();
             $table->text('feedback')->nullable();
             $table->timestamps();
         });
