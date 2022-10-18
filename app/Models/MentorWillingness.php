@@ -18,7 +18,13 @@ class MentorWillingness extends Model
         'city',
         'state',
         'is_accepted',
-        'is_selected'
+        'is_selected',
+        'designation',
+        'organization_name',
+        'cv',
+        'participated_in_previous',
+        'theme',
+        'expertise'
     ];
 
     public function user()
