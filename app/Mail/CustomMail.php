@@ -11,11 +11,12 @@ class CustomMail extends Mailable
     public array $data;
     public string $from_address;
     public string $from_name;
-    public string $attachment;
+    public string|null $attachment;
 
     public function __construct(string $mail_subject, string $content, array $data = [],
-                                string $from_address = 'innovationcell@aicte-india.org', string $from_name = 'Innovation Cell, AICTE',
-    string $attachment = null)
+                                string $from_address = 'innovationcell@aicte-india.org',
+                                string $from_name = 'Innovation Cell, AICTE',
+                                string $attachment = null)
     {
         $this->mail_subject = $mail_subject;
         $this->content = $content;
