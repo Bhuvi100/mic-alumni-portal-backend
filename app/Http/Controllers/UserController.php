@@ -85,8 +85,9 @@ class UserController extends Controller
         $user_array['expertise'] = $user->expertise;
 
         $w = auth()->user()->mentorWillingness->where('hackathon','UIA 2022')->first();
-        $user_array['is_uia_willing'] = (boolean) $w;
+        $user_array['is_uia_willing'] = !($w?->interested === false);
         $user_array['mentor_willingness_filled'] = $w && $w->theme;
+
 
         return response()->json([
             'user' => $user_array,

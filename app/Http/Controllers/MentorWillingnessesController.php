@@ -13,9 +13,7 @@ class MentorWillingnessesController extends Controller
 {
     public function store(Request $request)
     {
-        if (!($willingness = auth()->user()->mentorWillingness()->firstWhere('hackathon', 'UIA 2022'))) {
-            return abort(403);
-        }
+       $willingness = auth()->user()->mentorWillingness()->firstOrCreate(['hackathon' => 'UIA 2022'], ['interested' => true]);
 
         $request->validate([
             'theme' => ['required', 'string', 'max:255'],
