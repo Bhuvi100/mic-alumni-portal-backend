@@ -7,6 +7,7 @@ use App\Http\Requests\FeedbackUpdateRequest;
 use App\Models\Feedback;
 use App\Models\Project;
 use App\Models\User;
+use Maatwebsite\Excel\Excel;
 
 class FeedbackController extends Controller
 {
@@ -40,6 +41,6 @@ class FeedbackController extends Controller
 
     public function export()
     {
-        return \Excel::download(new FeedbacksExport(), 'feedbacks.xlsx');
+        return \Excel::download(new FeedbacksExport(), 'feedbacks.xlsx', Excel::CSV);
     }
 }
