@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Iterator;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromIterator;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithCustomChunkSize;
 
-class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustomChunkSize
+class UsersExport implements FromQuery, WithMapping, WithHeadings, WithCustomChunkSize
 {
     use Exportable;
 
@@ -94,8 +95,8 @@ class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustom
         return 1000;
     }
 
-    public function iterator(): Iterator
+    public function query()
     {
-        return User::whereNotNull('signed_up_at')->get();
+        return User::whereNotNull('signed_up_at');
     }
 }
