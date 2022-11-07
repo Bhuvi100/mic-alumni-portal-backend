@@ -27,22 +27,32 @@ class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustom
 
     public function headings(): array
     {
+//        return [
+//            'id',
+//            'name',
+//            'email',
+//            'alternate_email',
+//            'phone',
+//            'gender',
+//            'signed_up_at',
+//            'initiatives',
+//            'project_status',
+//            'feedback',
+//            'participant_status'
+//        ];
+
+
         return [
-            'id',
             'name',
             'email',
-            'alternate_email',
             'phone',
-            'gender',
-            'signed_up_at',
-            'initiatives',
-            'project_status',
-            'feedback',
-            'participant_status'
+            'feedback_status',
+            'sih_mentor_participation',
+            'uia_mentor_willingness'
         ];
     }
 
-    public function map($user): array
+    public function map(User $user): array
     {
 //        $initiatives = new Collection();
 //        $project_status = new Collection();
@@ -53,19 +63,30 @@ class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustom
 //            $project_status->add("{$project->initiative->hackathon} - {$project->initiative->edition} => {$status_submission}");
 //        }
 
+//        return [
+//            'id' => $user->id,
+//            'name' => $user->name,
+//            'email' => $user->email,
+//            'alternate_email' => $user->alternate_email,
+//            'phone' => $user->phone,
+//            'gender' => $user->gender,
+//            'signed_up_at' => $user->signed_up_at,
+////            'initiatives' => $initiatives->unique()->implode("\n"),
+////            'project_status' => $project_status->unique()->implode("\n"),
+////            'feedback' => $user->feedback()->exists() ? 'yes' : 'no',
+////            'participant_status' => $user->status()->exists() ? 'yes' : 'no',
+//        ];
+
         return [
-            'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'alternate_email' => $user->alternate_email,
             'phone' => $user->phone,
-            'gender' => $user->gender,
-            'signed_up_at' => $user->signed_up_at,
-//            'initiatives' => $initiatives->unique()->implode("\n"),
-//            'project_status' => $project_status->unique()->implode("\n"),
-//            'feedback' => $user->feedback()->exists() ? 'yes' : 'no',
-//            'participant_status' => $user->status()->exists() ? 'yes' : 'no',
-        ];
+            'feedback_status' => $user->feedback()->exists() ? 'Yes' : 'No',
+            'sih_mentor_participation' => $user->mentorFeedback()->where('confirm_attended', true)
+                ->exists() ? 'Yes' : 'No',
+            'uia_mentor_willingness' => $user->mentorWillingness()->where('hackathon', 'UIA 2022')->exists() ?
+                'Yes' : 'No'
+            ];
     }
 
     public function chunkSize(): int
