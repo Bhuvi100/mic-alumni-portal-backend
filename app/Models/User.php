@@ -110,6 +110,11 @@ class User extends Authenticatable
         return $this->hasMany(Project::class, 'leader_id');
     }
 
+    public function mentorFeedback()
+    {
+        return $this->hasMany(MentorFeedback::class);
+    }
+
     public function imports()
     {
         return $this->hasMany(Import::class, 'imported_by');
