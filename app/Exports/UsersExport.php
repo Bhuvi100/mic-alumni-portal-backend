@@ -22,7 +22,7 @@ class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustom
     public function itertor()
     {
 //        return User::filter()->with('projects.initiative')->select('users.*');'//
-//        return User::filter()->select('users.*')->lazy(1000);
+        return User::filter()->select('users.*')->lazy(1000);
     }
 
     public function headings(): array
@@ -52,7 +52,7 @@ class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustom
         ];
     }
 
-    public function map(User $user): array
+    public function map($user): array
     {
 //        $initiatives = new Collection();
 //        $project_status = new Collection();
