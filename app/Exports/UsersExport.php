@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithCustomChunkSize;
 
-class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustomChunkSize, ShouldQueue
+class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustomChunkSize
 {
     use Exportable;
 
