@@ -22,7 +22,7 @@ class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustom
     public function itertor()
     {
 //        return User::filter()->with('projects.initiative')->select('users.*');'//
-        return User::filter()->select('users.*')->get();
+        return User::whereNotNull('signed_up_at')->get();
     }
 
     public function headings(): array
@@ -96,6 +96,6 @@ class UsersExport implements FromIterator, WithMapping, WithHeadings, WithCustom
 
     public function iterator(): Iterator
     {
-        return User::filter()->select('users.*')->lazy(1000);
+        return User::whereNotNull('signed_up_at')->get();
     }
 }
