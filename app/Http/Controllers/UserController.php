@@ -71,12 +71,8 @@ class UserController extends Controller
 
     public function exportData()
     {
-//        UsersExportJob::dispatch(auth()->user(), request()->all());
+        UsersExportJob::dispatch(auth()->user(), request()->all());
 
-        (new UsersExport())->store(Storage::disk('local')->path('temp_users.xlsx'));
-        Mail::to(auth()->user())->send(new UserExportMail(Storage::disk('local')->path('temp_users.xlsx')));
-
-//
         return response()->json(['status' => 'success']);
 
     }

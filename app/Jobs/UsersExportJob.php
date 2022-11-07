@@ -86,35 +86,35 @@ class UsersExportJob implements ShouldQueue
             unset($initiatives, $project_status, $status_submission);
 
             $data = [
-                'id' => $user->id,
+//                'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'alternate_email' => $user->alternate_email,
+//                'alternate_email' => $user->alternate_email,
                 'phone' => $user->phone,
-                'gender' => $user->gender,
-                'signed_up_at' => $user->signed_up_at,
-                'employment_status' => $user->employment_status,
-                'degree' => $user->degree,
-                'organization_name' => $user->organization_name,
-                'designation' => $user->designation,
+//                'gender' => $user->gender,
+//                'signed_up_at' => $user->signed_up_at,
+//                'employment_status' => $user->employment_status,
+//                'degree' => $user->degree,
+//                'organization_name' => $user->organization_name,
+//                'designation' => $user->designation,
                 'initiatives' => $initiatives_string,
-                'project_status' => $status_string,
-                'feedback' => $user->feedback()->exists() ? 'yes' : 'no',
-                'participant_status' => $user->status()->exists() ? 'yes' : 'no',
-                'has_startup' => $startup_exists ? 'yes' : 'no',
+//                'project_status' => $status_string,
+//                'feedback' => $user->feedback()->exists() ? 'yes' : 'no',
+//                'participant_status' => $user->status()->exists() ? 'yes' : 'no',
+//                'has_startup' => $startup_exists ? 'yes' : 'no',
             ];
 
             unset($initiatives_string, $status_string);
 
-            if ($this->withMentorWillingness) {
-                $data['interested_SIH2022'] = $user->mentorWillingnessSih2022->first()->interested ? 'Yes' : 'No';
-                $data['category'] = $user->mentorWillingnessSih2022->first()->category;
-                $data['nodal_center'] = $user->mentorWillingnessSih2022->first()->nodal_center;
-                $data['associate'] = $user->mentorWillingnessSih2022->first()->associate;
-                $data['state'] = $user->mentorWillingnessSih2022->first()->state;
-                $data['city'] = $user->mentorWillingnessSih2022->first()->city;
-                $data['is_accepted'] = $user->mentorWillingnessSih2022->first()->is_accepted === null ? "Not responded" : ($user->mentorWillingnessSih2022->first()->is_accepted ? "Yes" : "No");
-            }
+//            if ($this->withMentorWillingness) {
+//                $data['interested_SIH2022'] = $user->mentorWillingnessSih2022->first()->interested ? 'Yes' : 'No';
+//                $data['category'] = $user->mentorWillingnessSih2022->first()->category;
+//                $data['nodal_center'] = $user->mentorWillingnessSih2022->first()->nodal_center;
+//                $data['associate'] = $user->mentorWillingnessSih2022->first()->associate;
+//                $data['state'] = $user->mentorWillingnessSih2022->first()->state;
+//                $data['city'] = $user->mentorWillingnessSih2022->first()->city;
+//                $data['is_accepted'] = $user->mentorWillingnessSih2022->first()->is_accepted === null ? "Not responded" : ($user->mentorWillingnessSih2022->first()->is_accepted ? "Yes" : "No");
+//            }
 
             return $data;
         });
