@@ -53,7 +53,7 @@ class UsersExport implements FromQuery, WithMapping, WithHeadings, WithCustomChu
         ];
     }
 
-    public function map(User $user): array
+    public function map($user): array
     {
 //        $initiatives = new Collection();
 //        $project_status = new Collection();
