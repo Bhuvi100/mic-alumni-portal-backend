@@ -169,7 +169,7 @@ class User extends Authenticatable
             $query->whereIn('projects.initiative_id', $initiatives);
         }
 
-        if ($filter['mentor_willingness']) {
+        if ($filter['mentor_willingness'] ?? false) {
             $query->whereHas('mentorWillingnessSih2022');
         }
 
