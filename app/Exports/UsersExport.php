@@ -53,7 +53,7 @@ class UsersExport implements FromQuery, WithMapping, WithHeadings, WithCustomChu
         ];
     }
 
-    public function map($user): array
+    public function map(User $user): array
     {
 //        $initiatives = new Collection();
 //        $project_status = new Collection();
@@ -83,11 +83,10 @@ class UsersExport implements FromQuery, WithMapping, WithHeadings, WithCustomChu
             'email' => $user->email,
             'phone' => $user->phone,
             'feedback_status' => $user->feedback()->exists() ? 'Yes' : 'No',
-            'sih_mentor_participation' => $user->mentorFeedback()->where('confirm_attended', true)
-                ->exists() ? 'Yes' : 'No',
+            'sih_mentor_participation' => $user->mentorWillingness()->whereRelation('feedback', 'confirm_attended', '=', true)->exists() ? 'Yes' : 'No',
             'uia_mentor_willingness' => $user->mentorWillingness()->where('hackathon', 'UIA 2022')->exists() ?
                 'Yes' : 'No'
-            ];
+        ];
     }
 
     public function chunkSize(): int
