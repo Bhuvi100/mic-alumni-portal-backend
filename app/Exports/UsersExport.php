@@ -5,7 +5,6 @@ namespace App\Exports;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Iterator;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromIterator;
@@ -48,7 +47,9 @@ class UsersExport implements FromQuery, WithMapping, WithHeadings, WithCustomChu
             'name',
             'email',
             'phone',
-            'sih_participation',
+            'feedback_status',
+            'sih_mentor_participation',
+            'uia_mentor_willingness'
         ];
     }
 
@@ -77,16 +78,14 @@ class UsersExport implements FromQuery, WithMapping, WithHeadings, WithCustomChu
 ////            'participant_status' => $user->status()->exists() ? 'yes' : 'no',
 //        ];
 
-        $initiatives = new Collection();
-
-        foreach ($user->projects as $project) {
-            $initiatives->add("{$project->initiative->hackathon} - {$project->initiative->edition}");
-        }
         return [
             'name' => $user->name,
             'email' => $user->email,
             'phone' => $user->phone,
-            'sih_participation' => $initiatives->unique()->implode("\n"),
+            'feedback_status' => $user->feedback()->exists() ? 'Yes' : 'No',
+            'sih_mentor_participation' => $user->mentorWillingness()->whereRelation('feedback', 'confirm_attended', '=', true)->exists() ? 'Yes' : 'No',
+            'uia_mentor_willingness' => $user->mentorWillingness()->where('hackathon', 'UIA 2022')->exists() ?
+                'Yes' : 'No'
         ];
     }
 
@@ -97,6 +96,6 @@ class UsersExport implements FromQuery, WithMapping, WithHeadings, WithCustomChu
 
     public function query()
     {
-        return User::whereNull('signed_up_at');
+        return User::whereNotNull('signed_up_at');
     }
 }
