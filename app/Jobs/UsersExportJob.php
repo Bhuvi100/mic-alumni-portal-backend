@@ -70,8 +70,10 @@ class UsersExportJob implements ShouldQueue
                 }
             }
 
+            $college = $user->projects->latest()->first()->college;
+
             if (!$startup_exists && $user->feedback?->registered_startup) {
-                    $startup_exists = true;
+                $startup_exists = true;
             } else {
                 foreach ($user->status ?? [] as $own_idea) {
                     if ($own_idea->project_incubated) {
@@ -92,6 +94,7 @@ class UsersExportJob implements ShouldQueue
                 'alternate_email' => $user->alternate_email,
                 'phone' => $user->phone,
                 'gender' => $user->gender,
+                'college' => $college,
                 'signed_up_at' => $user->signed_up_at,
                 'employment_status' => $user->employment_status,
                 'degree' => $user->degree,
