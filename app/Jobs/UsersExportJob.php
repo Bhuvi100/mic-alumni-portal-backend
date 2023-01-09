@@ -70,7 +70,7 @@ class UsersExportJob implements ShouldQueue
                 }
             }
 
-            $college = $user->projects->latest()->first()->college;
+            $college = $user->projects()->latest()->first()->college;
 
             if (!$startup_exists && $user->feedback?->registered_startup) {
                 $startup_exists = true;
