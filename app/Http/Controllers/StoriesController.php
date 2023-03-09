@@ -109,6 +109,11 @@ class StoriesController extends Controller
             [
                 'title' => ['required', 'string'],
                 'description' => ['required', 'string'],
+                'problem'  => ['required', 'string'],
+                'unique' => ['required', 'string'],
+                'impact' => ['required', 'string'],
+                'market_size' => ['required', 'string'],
+                'category' => ['required', 'string', 'max:240'],
             ]
         );
 
@@ -123,6 +128,11 @@ class StoriesController extends Controller
             [
                 'title' => ['required', 'string'],
                 'description' => ['required', 'string'],
+                'problem'  => ['required', 'string'],
+                'unique' => ['required', 'string'],
+                'impact' => ['required', 'string'],
+                'market_size' => ['required', 'string'],
+                'category' => ['required', 'string', 'max:240'],
             ]
         );
 

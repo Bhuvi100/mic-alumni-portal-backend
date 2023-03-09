@@ -12,6 +12,11 @@ class Story extends Model
         'description',
         'display',
         'archive',
+        'problem',
+        'unique',
+        'impact',
+        'market_size',
+        'category',
     ];
 
     public function user()
