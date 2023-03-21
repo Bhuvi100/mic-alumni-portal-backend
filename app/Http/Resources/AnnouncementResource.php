@@ -24,6 +24,7 @@ class AnnouncementResource extends JsonResource
             'attachment' => $this->attachment ? asset('storage/' . ($this->attachment)) : '',
             'created_month' => Carbon::create($this->getRawOriginal('created_at'))->monthName,
             'created_date' => Carbon::create($this->getRawOriginal('created_at'))->format('d'),
+            'created_year' => Carbon::create($this->getRawOriginal('created_at'))->year,
         ];
     }
 }
