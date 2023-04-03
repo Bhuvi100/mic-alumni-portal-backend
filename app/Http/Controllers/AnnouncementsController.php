@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AnnouncementRequest;
 use App\Http\Resources\AnnouncementResource;
 use App\Http\Resources\AnnouncementsCollection;
+use App\Http\Resources\ChangeMakerResource;
 use App\Models\Announcement;
+use App\Models\ChangeMaker;
 use App\Policies\BasePolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +19,13 @@ class AnnouncementsController extends Controller
         $announcements = \Cache::rememberForever('announcements_public',
             fn() => Announcement::latest()->with('user:id,name')->where('status', 'live')->get());
 
-        return response()->json(AnnouncementResource::collection($announcements));
+        $changeMakers = \Cache::rememberForever('changemakers_public',
+            fn() => ChangeMaker::latest()->with('user:id,name')->where('status', 'live')->get());
+
+        return response()->json([
+            'announcements' => AnnouncementResource::collection($announcements),
+            'changemakers' => ChangeMakerResource::collection($changeMakers)
+        ]);
     }
 
     public function index()

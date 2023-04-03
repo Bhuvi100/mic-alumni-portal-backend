@@ -54,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('imports/sample/download', [\App\Http\Controllers\ImportsController::class, 'download_sample']);
         Route::post('imports/{import}/download', [\App\Http\Controllers\ImportsController::class, 'download'])->name('imports.download');
         Route::resource('announcements', \App\Http\Controllers\AnnouncementsController::class);
+        Route::resource('changemakers', \App\Http\Controllers\ChangeMakersController::class);
         Route::get('initiatives/{initiative}/stats', [\App\Http\Controllers\InitiativesController::class, 'getStats']);
         Route::resource('initiatives', \App\Http\Controllers\InitiativesController::class);
 
