@@ -61,3 +61,13 @@ if (!function_exists('render_blade_string')) {
         });
     }
 }
+
+if (!function_exists('image_to_base64')) {
+    function image_to_base64($path)
+    {
+        $path = Storage::path($path);
+        $type = pathinfo($path,PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        return 'data:image/' . $type . ';base64,' . base64_encode($data);
+    }
+}
