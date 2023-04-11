@@ -5,11 +5,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Software Edition Certificate 2019</title>
 </head>
-<body style="background-image: url('{{ image_to_base64('certificates/2019/sih-2019-software-edition-participation-certificate-bg.png') }}');background-repeat: no-repeat;background-size:cover;width:100%;height: 100%;">
+<body style="background-image: url('{{ image_to_base64('certificates/2019/sih-2019-software-edition-participation-certificate-bg.png') }}');background-repeat: no-repeat;background-size:cover;width:100%;height: 940px;">
 	<div class="resMainTop" style="min-height: auto;width: 70%;">
-	    <p class="allContentResMain" style="width: 90%;text-align:center;color:#000;font-size: 25px !important;font-family: 'Josefin Sans', sans-serif;font-weight: 400;margin-left: 31%;line-height: 50px;margin-top: 25% ">This certificate is awarded to <br><u>{{ $participant_name }}</u><br>of team {{ $team_name }} for participating in <br> <span style="font-size:30px;font-weight:700;line-height: 55px;">'Smart India Hackathon, 2019'.</span>
+	    <p class="allContentResMain" style="width: 90%;text-align:center;color:#000;font-size: 25px !important;font-family: 'Josefin Sans', sans-serif;font-weight: 400;margin-left: 31%;line-height: 50px;padding-top: 35% ">This certificate is awarded to <br><u>{{ $participant_name }}</u><br>of team {{ $team_name }} for participating in <br> <span style="font-size:30px;font-weight:700;line-height: 55px;">'Smart India Hackathon, 2019'.</span>
 	    </p>
 	</div>
-<!--	<img style="display: inline-block;height: 70px;width: 70px;float: right;margin-top: 17.5%;margin-right: -3%;" src="./QR-code.png" alt="image">-->
+	<img style="display: inline-block;height: 70px;width: 70px;float: right;margin-top: 9.5%;margin-right: 20px" src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate($certificate_url)) !!}" alt="image">
 </body>
 </html>
