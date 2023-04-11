@@ -89,4 +89,5 @@ Route::get('/test', function () {
     return new \App\Mail\MagicLoginMail('google.com');
 });
 
-Route::get('certificates/{project}/{user}', \App\Http\Controllers\CertificatesController::class)->name('certificates');
+Route::get('certificates/{project}/{user}', [\App\Http\Controllers\CertificatesController::class, 'view'])->name('certificates');
+Route::get('certificates/{project}/{user}/download', [\App\Http\Controllers\CertificatesController::class, 'download'])->name('certificates.download');
