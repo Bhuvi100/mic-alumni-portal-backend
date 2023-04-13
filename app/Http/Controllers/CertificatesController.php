@@ -12,8 +12,8 @@ class CertificatesController extends Controller
     {
         $mapping = [
             1 => '2017/2017',
-            2 => '2018/2018',
-            3 => '2018/2018',
+            2 => '2018/hw',
+            3 => '2018/sw',
             4 => '2019/hw',
             5 => '2019/sw',
             6 => '2020/sw',
@@ -42,8 +42,8 @@ class CertificatesController extends Controller
     {
         $mapping = [
             1 => '2017/2017',
-            2 => '2018/2018',
-            3 => '2018/2018',
+            2 => '2018/hw',
+            3 => '2018/sw',
             4 => '2019/hw',
             5 => '2019/sw',
             6 => '2020/sw',
