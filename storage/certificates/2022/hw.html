@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>SIH Participation Certificate Design Senior Hardware Edition</title>
+</head>
+<body style="background-image: url('{{ image_to_base64('certificates/2022/SIH_Participation_Certificate_Design_Senior_Hardware_Edition_bg.png') }}');background-repeat: no-repeat;background-size:cover;height: 982px;">
+
+<div class="resMainTop" style="min-height: auto;width: 100%; margin-top: 250px">
+
+	<p class="allContentResMain" style="width:auto;text-align:center;color:#000;font-size:25px !important;font-family: 'Josefin Sans', sans-serif;font-weight: 400;margin-left: 3%;
+    line-height:50px;margin-top:20%;padding-top:35%;">This certificate is awarded to <br><u>{{ $participant_name }}</u><br> for participating in <span style="font-size:30px;font-weight:700;line-height: 55px;color:#2a4048;">Smart India Hackathon, 2022</span>
+	</p>
+
+</div>
+<img style="display: inline-block;height: 70px;width: 70px;float: right;margin-top: -2.5%;margin-right: 120px" src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate($certificate_url)) !!}" alt="image">
+</body>
+</html>

@@ -23,6 +23,9 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
 
     private Import $import;
 
+    private int $members_count = 0;
+    private int $teams_count = 0;
+
     public function __construct(Import $import)
     {
         $this->import = $import;
@@ -89,9 +92,9 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
                     $data['gender'] = 'na';
                 }
 
-                if (!$leader = User::firstWhere('email',$data['email'])) {
+                if (!$leader = User::firstWhere('email', $data['email'])) {
                     $leader = User::create($data);
-                    $users ++;
+                    $users += 1;
                 }
 
                 //Creating Project
@@ -105,6 +108,10 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
                     $data['ps_title'] = substr($data['ps_title'],0,255);
                 }
 
+                if (Str::length($data['college']) > 255) {
+                    $data['college'] = substr($data['college'],0,255);
+                }
+
                 $data['initiative_id'] = $this->import->initiative_id;
 
                 $project = $leader->projects_as_leader()->firstOrCreate($data);
@@ -114,7 +121,6 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
                 if ($project->wasRecentlyCreated) {
                     $projects ++;
                 }
-
 
                 //Creating members
                 for ($id = 2; $id < 7; $id ++) {
@@ -133,17 +139,18 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
                         $data['gender'] = 'na';
                     }
 
-                    if (($user = User::firstWhere('email',$data['email']))) {
+                    if (($user = User::firstWhere('email', $data['email']))) {
                         if (!$user->projects()->find($project->id)) {
                             $project->users()->attach($user);
                         }
                     } else {
                         $project->users()->create($data);
-                        $users ++;
+                        $users += 1;
                     }
                 }
             }
 
+            $this->import->refresh();
             $this->import->update(['projects' => (int)($this->import->projects) + $projects,
                 'users' => (int)($this->import->users) + $users]);
         } catch (\Throwable $exception) {
@@ -202,6 +209,6 @@ class DataImport implements ToCollection, WithHeadingRow, WithChunkReading, Shou
 
     public function chunkSize(): int
     {
-        return 3000;
+        return 100;
     }
 }

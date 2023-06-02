@@ -48,6 +48,8 @@ class CertificatesController extends Controller
             5 => '2019/sw',
             6 => '2020/sw',
             7 => '2020/hw',
+            9 => '2022/sw',
+            10 => '2022/hw'
         ];
 
         $current_html = $mapping[$project->initiative_id] ?? false;
@@ -68,3 +70,5 @@ class CertificatesController extends Controller
             ->download('certificate.pdf');
     }
 }
+
+
