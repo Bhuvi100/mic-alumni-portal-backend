@@ -13,10 +13,10 @@ class MentorWillingnessesController extends Controller
 {
     public function store(Request $request)
     {
-       $willingness = auth()->user()->mentorWillingness()->firstOrCreate(['hackathon' => 'UIA 2022'], ['interested' => true]);
+       $willingness = auth()->user()->mentorWillingness()->firstOrCreate(['hackathon' => 'SIH 2023'], ['interested' => true]);
 
         $request->validate([
-            'theme' => ['required', 'string', 'max:255'],
+            'nodal_center' => ['required', 'string', 'max:255'],
             'expertise' => ['required', 'string', 'max:255'],
             'designation' => ['required', 'string', 'max:255'],
             'organization_name' => ['required', 'string', 'max:255'],
@@ -33,7 +33,7 @@ class MentorWillingnessesController extends Controller
                 \Storage::delete($willingness->cv);
             }
 
-            $willingness->cv = $request->file('cv')->store('willingness/uia/cv');
+            $willingness->cv = $request->file('cv')->store('willingness/sih2023/cv');
             $willingness->save();
         }
 
@@ -42,9 +42,9 @@ class MentorWillingnessesController extends Controller
 
     public function show(?User $user)
     {
-        $user = $user?->id ? $user : auth()->user();
+        $user = $user?->id ?  $user : auth()->user();
 
         return response()
-            ->json($user->mentorWillingness()->firstWhere('hackathon', 'UIA 2022') ?? []);
+            ->json($user->mentorWillingness()->firstWhere('hackathon', 'SIH 2023') ?? []);
     }
 }
