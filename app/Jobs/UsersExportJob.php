@@ -37,8 +37,7 @@ class UsersExportJob implements ShouldQueue
 
         if ($this->withMentorWillingness) {
             $query->with('mentorWillingnessSih2022')
-                ->whereRelation('mentorWillingness','is_selected', '=', true)
-                ->whereRelation('mentorWillingness', 'city', '!=', null);
+                ->whereRelation('mentorWillingness','hackathon', '=', 'SIH 2023');
         }
 
         foreach ($query->lazy(1000) as $user) {
@@ -110,13 +109,15 @@ class UsersExportJob implements ShouldQueue
             unset($initiatives_string, $status_string);
 
             if ($this->withMentorWillingness) {
-                $data['interested_SIH2022'] = $user->mentorWillingnessSih2022->first()->interested ? 'Yes' : 'No';
-                $data['category'] = $user->mentorWillingnessSih2022->first()->category;
-                $data['nodal_center'] = $user->mentorWillingnessSih2022->first()->nodal_center;
-                $data['associate'] = $user->mentorWillingnessSih2022->first()->associate;
-                $data['state'] = $user->mentorWillingnessSih2022->first()->state;
-                $data['city'] = $user->mentorWillingnessSih2022->first()->city;
-                $data['is_accepted'] = $user->mentorWillingnessSih2022->first()->is_accepted === null ? "Not responded" : ($user->mentorWillingnessSih2022->first()->is_accepted ? "Yes" : "No");
+                $mentorWillingness = $user->mentorWillingness()->firstWhere('hackathon', 'SIH 2023');
+                $data['category'] = $mentorWillingness->category;
+                $data['nodal_center'] = $mentorWillingness->nodal_center;
+                $data['designation'] = $mentorWillingness->designation;
+                $data['organization_name'] = $mentorWillingness->organization_name;
+                $data['state'] = $mentorWillingness->state;
+                $data['city'] = $mentorWillingness->city;
+                $data['participated_in_previous'] = $mentorWillingness->participated_in_previous;
+                $data['cv'] = $mentorWillingness->cv;
             }
 
             return $data;
